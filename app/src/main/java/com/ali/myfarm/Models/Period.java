@@ -1,0 +1,65 @@
+package com.ali.myfarm.Models;
+
+import java.io.Serializable;
+
+public class Period implements Serializable {
+    private String name;
+    private String beginningDate;
+    private String endDate;
+    private int numberOfChicken;
+    private int numberOfDead;
+    private int numberOfSold;
+    private int numberOfFeedBags;
+    private double chickenPrice;
+
+
+    public Period() {
+    }
+
+    public Period(String name, String beginningDate, String endDate, int numberOfChicken, int numberOfDead, int numberOfSold, int numberOfFeedBags, double chickenPrice) {
+        this.name = name;
+        this.beginningDate = beginningDate;
+        this.endDate = endDate;
+        this.numberOfChicken = numberOfChicken;
+        this.numberOfDead = numberOfDead;
+        this.numberOfSold = numberOfSold;
+        this.numberOfFeedBags = numberOfFeedBags;
+        this.chickenPrice = chickenPrice;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBeginningDate() {
+        return beginningDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public int getNumberOfChicken() {
+        return numberOfChicken;
+    }
+
+    public int getNumberOfDead() {
+        return numberOfDead;
+    }
+
+    public int getNumberOfSold() {
+        return numberOfSold;
+    }
+
+    public int getNumberOfFeedBags() {
+        return numberOfFeedBags;
+    }
+
+    public double getChickenPrice() {
+        return chickenPrice;
+    }
+
+    public int getNumberOfAliveChickens() {
+        return getNumberOfChicken() - getNumberOfDead();
+    }
+}

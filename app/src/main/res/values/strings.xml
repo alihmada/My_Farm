@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">مزرعتى</string>
+
+    <string name="tracking">متابعة</string>
+    <string name="phone_hint">01 xxx xxx xxxx</string>
+
+    <string name="otp">رمز التحقق</string>
+    <string name="verification_code">رمز التحقق</string>
+    <string name="verification_text">لقد أرسلنا اليك رمز التحقق</string>
+
+    <string name="first_name">الإسم الأول</string>
+    <string name="last_name">الإسم الأخير</string>
+    <string name="farm_id">الرقم التعريفى للمزرعة</string>
+
+    <string name="login">تسجيل الدخول</string>
+    <string name="mobile">رقم الهاتف</string>
+    <string name="invalid_phone_no">قم بادخال رقم هاتف صحيح</string>
+    <string name="invalid_country_code">من فضلك قم بإختيار كود بلد صحيح</string>
+
+    <string name="loading">جارى التحميل…</string>
+    <string name="error_in_inputs">من فضلك راجع البيانات المدخلة</string>
+    <string name="search">البحث</string>
+    <string name="data_not_found">لا توجد بيانات للعرض</string>
+    <string name="num_of_chicks">ادخل عدد الكتاكيت</string>
+    <string name="number_of_dead">كم النافق؟</string>
+    <string name="price_of_chicks">ادخل سعر الكتكوت</string>
+    <string name="complete_registration">إتمام التسجيل</string>
+
+    <string name="add">إضافة</string>
+    <string name="remove">إزالة</string>
+    <string name="over">ناهي</string>
+    <string name="initialize">بادي</string>
+    <string name="enter_num_of_bags">ادخل عدد الشكاير</string>
+    <string name="num_of_bags">عدد الشكاير</string>
+    <string name="enter_price_of_ton">ادخل سعر الطن</string>
+
+    <!-- internet -->
+    <string name="no_internet">خطأ فى الإتصال بالإنترنت</string>
+    <string name="internet_limited">سرعة الإتصال محدودة</string>
+
+
+    <string name="trader">تاجر</string>
+    <string name="buyer">مشترى</string>
+    <string name="buyer_transaction">اضغط لإضافة مشترى</string>
+    <string name="trader_transaction">اضغط لإضافة تاجر</string>
+
+    <string name="enter_no_of_cages">العدد الكلى للأقفاص</string>
+    <string name="weight_of_empty_cages">وزن الأقفاص الفارغة</string>
+    <string name="weight_of_full_cages">وزن الأقفاص الممتلئة</string>
+    <string name="no_of_chickens">العدد الكلى للفراخ</string>
+    <string name="price_of_kg">سعر الكيلوجرام</string>
+    <string name="show_bill">اظهار الفاتورة</string>
+    <string name="check_inputs">تحقق من صحة البيانات المدخلة</string>
+    <string name="traders">التجار</string>
+    <string name="buyers">المشترين</string>
+    <string name="alerts">التنبيهات</string>
+    <string name="debts">الديون</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="die">الوفيات</string>
+    <string name="sold">المبيعات</string>
+    <string name="growing">نامي</string>
+
+    <string name="operation">العملية</string>
+    <string name="price">السعر</string>
+    <string name="ok">موافق</string>
+    <string name="chickens_no_out">الرقم الذى أدخلته أكبر من عدد الأحياء\nمن فضلك تأكد من الرقم المدخل</string>
+    <string name="running_period">لديك دورة نشطة بالفعل</string>
+    <string name="bags_num_out">عدد الشكاير المدخل أكبر من الموجود\nمن فضلك راجع المدخلات</string>
+
+    <string name="gas">غاز</string>
+    <string name="diesel">سولار</string>
+
+    <string name="num_of_gas_cylinders">عدد اسطوانات الغاز</string>
+    <string name="num_of_diesel_bottles">عدد لترات السولار</string>
+    <string name="heating">الــتــدفــئــة</string>
+    <string name="enter_a_number_of_cylinders">ادخل عدد الأنابيب</string>
+    <string name="enter_a_price_of_cylinders">ادخل سعر الأنبوبة</string>
+    <string name="enter_a_number_of_liters">ادخل عدد اللترات</string>
+    <string name="enter_a_price_of_liters">ادخل سعر اللتر</string>
+</resources>
