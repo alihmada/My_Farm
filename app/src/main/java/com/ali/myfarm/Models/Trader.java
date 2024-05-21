@@ -3,13 +3,13 @@ package com.ali.myfarm.Models;
 public class Trader extends Buying {
     private int totalNumberOfCages;
     private double totalWeightOfCages;
-    private int totalWeightOfEmptyCages;
+    private double totalWeightOfEmptyCages;
 
     public Trader() {
     }
 
-    public Trader(String date, double priceOfKilogram, int numberOfChickens, double weightOfChickens, int totalNumberOfCages, double totalWeightOfCages, int totalWeightOfEmptyCages) {
-        super(date, priceOfKilogram, numberOfChickens, weightOfChickens);
+    public Trader(String name, int totalNumberOfCages, double totalWeightOfEmptyCages, double totalWeightOfCages, int numberOfChickens, double priceOfKilogram, double weightOfChickens, String date) {
+        super(date, priceOfKilogram, name, numberOfChickens, weightOfChickens);
         this.totalNumberOfCages = totalNumberOfCages;
         this.totalWeightOfCages = totalWeightOfCages;
         this.totalWeightOfEmptyCages = totalWeightOfEmptyCages;
@@ -31,7 +31,7 @@ public class Trader extends Buying {
         this.totalWeightOfCages = totalWeightOfCages;
     }
 
-    public int getTotalWeightOfEmptyCages() {
+    public double getTotalWeightOfEmptyCages() {
         return totalWeightOfEmptyCages;
     }
 

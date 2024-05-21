@@ -1,6 +1,8 @@
 package com.ali.myfarm.Activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Data.Firebase;
 import com.ali.myfarm.Dialogs.ChickenStatus;
 import com.ali.myfarm.Fragments.Die;
-import com.ali.myfarm.Fragments.Sold;
+import com.ali.myfarm.Fragments.Sales;
 import com.ali.myfarm.MVVM.PeriodViewMadel;
 import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.R;
@@ -73,7 +75,7 @@ public class Chicken extends AppCompatActivity {
         back.setOnClickListener(view -> onBackPressed());
 
         ImageButton record = findViewById(R.id.record);
-        record.setOnClickListener(view -> {
+        record.setOnClickListener(view -> new Handler(Looper.getMainLooper()).post(() -> {
             ChickenStatus status = new ChickenStatus(dead -> {
                 Firebase
                         .getChicken(
@@ -90,10 +92,10 @@ public class Chicken extends AppCompatActivity {
                                 )
                         );
 
-                Firebase.getPeriod(Chicken.this, mainID, periodID).child(Common.NUMBER_OF_DEAD).addListenerForSingleValueEvent(new ValueEventListener() {
+                Firebase.getSpecificPeriod(Chicken.this, mainID, periodID).child(Common.NUMBER_OF_DEAD).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Firebase.getPeriod(Chicken.this, mainID, periodID).child(Common.NUMBER_OF_DEAD).setValue(snapshot.getValue(int.class) + dead);
+                        Firebase.getSpecificPeriod(Chicken.this, mainID, periodID).child(Common.NUMBER_OF_DEAD).setValue(snapshot.getValue(int.class) + dead);
                     }
 
                     @Override
@@ -103,14 +105,14 @@ public class Chicken extends AppCompatActivity {
                 });
             });
             status.show(getSupportFragmentManager(), "");
-        });
+        }));
     }
 
     private void setupViewPager() {
         tabLayout.setupWithViewPager(viewPager);
 
         FragmentViewPagerAdapter ordersViewPagerAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        ordersViewPagerAdapter.addFragment(new Sold(), getString(R.string.sold));
+        ordersViewPagerAdapter.addFragment(new Sales(mainID, periodID), getString(R.string.sold));
         ordersViewPagerAdapter.addFragment(new Die(mainID, periodID), getString(R.string.die));
 
         viewPager.setAdapter(ordersViewPagerAdapter);

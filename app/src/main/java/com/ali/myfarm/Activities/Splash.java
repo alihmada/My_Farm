@@ -45,7 +45,7 @@ public class Splash extends AppCompatActivity {
         String user = sharedPreferences.getString(Common.USER_DATA, "");
         String root = sharedPreferences.getString(Common.FARM_ID, "");
 
-        if (!user.equals("") && !root.equals("")) {
+        if (!user.isEmpty() && !root.isEmpty()) {
             Common.setROOT(root);
             updateUserData();
             redirectToMainScreen();

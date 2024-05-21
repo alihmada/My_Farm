@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/margin"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="@dimen/secondary_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/num"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
                         android:layout_marginTop="@dimen/margin"
                         android:layout_marginEnd="@dimen/margin"
                         android:text="@string/price"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,13 +92,26 @@
                         android:layout_margin="@dimen/margin_0.5"
                         android:gravity="center"
                         android:maxLength="7"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/feed_bag2"
                         app:layout_constraintEnd_toStartOf="@+id/feed_bag2"
                         app:layout_constraintTop_toTopOf="@+id/feed_bag2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin"
+                        android:gravity="center"
+                        android:text="@string/le"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintBottom_toBottomOf="@+id/price"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/price" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-            
+
             <com.google.android.material.card.MaterialCardView
                 style="@style/outlinedCardViewStyleWithoutMargin"
                 android:layout_width="0dp"
@@ -120,7 +133,7 @@
                         android:layout_marginTop="@dimen/margin"
                         android:layout_marginEnd="@dimen/margin"
                         android:text="@string/num_of_gas_cylinders"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -142,10 +155,23 @@
                         android:layout_margin="@dimen/margin_0.5"
                         android:gravity="center"
                         android:maxLength="6"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/heating_item"
                         app:layout_constraintEnd_toStartOf="@+id/heating_item"
                         app:layout_constraintTop_toTopOf="@+id/heating_item" />
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin"
+                        android:gravity="center"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintBottom_toBottomOf="@+id/number_of_items"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/number_of_items" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -149,10 +149,10 @@ public class FeedStatus extends DialogFragment {
         if (operation == null) setSelectionError(selectOperation);
 
         setInputsError(numberOfBags, !Matcher.isNumber(numberOfBags.getText().toString()));
-        setInputsError(priceOfTon, !Matcher.isPrice(priceOfTon.getText().toString()));
+        setInputsError(priceOfTon, !Matcher.isFloatingNumber(priceOfTon.getText().toString()));
 
         if (operation != null && operation == Bag.Operation.ADD)
-            return type != null && Matcher.isNumber(numberOfBags.getText().toString()) && Matcher.isPrice(priceOfTon.getText().toString());
+            return type != null && Matcher.isNumber(numberOfBags.getText().toString()) && Matcher.isFloatingNumber(priceOfTon.getText().toString());
         else
             return type != null && operation != null && Matcher.isNumber(numberOfBags.getText().toString());
     }

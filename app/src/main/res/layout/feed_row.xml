@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/margin"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="@dimen/secondary_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/num"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,8 @@
                         android:layout_marginTop="@dimen/margin"
                         android:layout_marginEnd="@dimen/margin"
                         android:text="@string/price"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,7 +93,8 @@
                         android:layout_margin="@dimen/margin_0.5"
                         android:gravity="center"
                         android:maxLength="7"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/feed_bag2"
                         app:layout_constraintEnd_toStartOf="@+id/feed_bag2"
                         app:layout_constraintTop_toTopOf="@+id/feed_bag2" />
@@ -120,7 +122,8 @@
                         android:layout_marginTop="@dimen/margin"
                         android:layout_marginEnd="@dimen/margin"
                         android:text="@string/operation"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,7 +144,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_0.5"
                         android:gravity="center"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/operation"
                         app:layout_constraintEnd_toStartOf="@+id/operation"
                         app:layout_constraintTop_toTopOf="@+id/operation" />
@@ -169,7 +173,8 @@
                         android:layout_marginTop="@dimen/margin"
                         android:layout_marginEnd="@dimen/margin"
                         android:text="@string/num_of_bags"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -191,7 +196,8 @@
                         android:layout_margin="@dimen/margin_0.5"
                         android:gravity="center"
                         android:maxLength="6"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/secondary_text_size"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/feed_bag"
                         app:layout_constraintEnd_toStartOf="@+id/feed_bag"
                         app:layout_constraintTop_toTopOf="@+id/feed_bag" />

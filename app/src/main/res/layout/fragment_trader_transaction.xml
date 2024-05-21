@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    tools:context=".Fragments.TraderTransaction">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/press_to_add_trader"
+            style="@style/focusable_clickable"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/select_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/transaction_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="?colorPrimary">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding">
+
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/person"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        style="@style/single_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/arrow" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/transaction_hint"
+                style="@style/not_focusable_clickable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trader_transaction"
+                android:textColor="@color/sonic_silver"
+                android:textSize="@dimen/text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center"
+            android:paddingEnd="@dimen/padding"
+            android:text="@string/enter_no_of_cages"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/total_num_of_cages"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:background="@drawable/input_filed"
+            app:layout_constraintEnd_toEndOf="@+id/press_to_add_trader"
+            app:layout_constraintStart_toStartOf="@+id/press_to_add_trader"
+            app:layout_constraintTop_toBottomOf="@+id/press_to_add_trader">
+
+            <EditText
+                android:id="@+id/no_of_cages"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/enter_no_of_cages"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:tooltipText="@string/enter_no_of_cages"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/no_of_cages_equal"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/no_of_cages_equal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button_ripple_effect"
+                android:padding="@dimen/padding"
+                android:src="@drawable/equal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center"
+            android:paddingEnd="@dimen/padding"
+            android:text="@string/weight_of_empty_cages"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/total_num_of_empty_cages"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:background="@drawable/input_filed"
+            app:layout_constraintEnd_toEndOf="@+id/press_to_add_trader"
+            app:layout_constraintStart_toStartOf="@+id/press_to_add_trader"
+            app:layout_constraintTop_toBottomOf="@+id/total_num_of_cages">
+
+            <EditText
+                android:id="@+id/no_of_empty_cages"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/weight_of_empty_cages"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:tooltipText="@string/weight_of_empty_cages"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/no_of_empty_cages_equal"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/no_of_empty_cages_equal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button_ripple_effect"
+                android:padding="@dimen/padding"
+                android:src="@drawable/equal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center"
+            android:paddingEnd="@dimen/padding"
+            android:text="@string/weight_of_full_cages"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/total_num_of_full_cages"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:background="@drawable/input_filed"
+            app:layout_constraintEnd_toEndOf="@+id/press_to_add_trader"
+            app:layout_constraintStart_toStartOf="@+id/press_to_add_trader"
+            app:layout_constraintTop_toBottomOf="@+id/total_num_of_empty_cages">
+
+            <EditText
+                android:id="@+id/no_of_full_cages"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/weight_of_full_cages"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:tooltipText="@string/weight_of_full_cages"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/no_of_full_cages_equal"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/no_of_full_cages_equal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button_ripple_effect"
+                android:padding="@dimen/padding"
+                android:src="@drawable/equal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center"
+            android:paddingEnd="@dimen/padding"
+            android:text="@string/no_of_chickens"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/total_num_of_chickens"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:background="@drawable/input_filed"
+            app:layout_constraintEnd_toEndOf="@+id/total_num_of_full_cages"
+            app:layout_constraintStart_toStartOf="@+id/total_num_of_full_cages"
+            app:layout_constraintTop_toBottomOf="@+id/total_num_of_full_cages">
+
+            <EditText
+                android:id="@+id/total_num_of_chicken"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/no_of_chickens"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:tooltipText="@string/no_of_chickens"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/total_num_of_chickens_equal"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/total_num_of_chickens_equal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button_ripple_effect"
+                android:padding="@dimen/padding"
+                android:src="@drawable/equal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center"
+            android:paddingEnd="@dimen/padding"
+            android:text="@string/price_of_kg"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <EditText
+            android:id="@+id/kg_price"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:background="@drawable/input_filed"
+            android:gravity="center"
+            android:hint="@string/price_of_kg"
+            android:inputType="numberDecimal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp"
+            android:tooltipText="@string/price_of_kg"
+            app:layout_constraintEnd_toEndOf="@+id/total_num_of_chickens"
+            app:layout_constraintStart_toStartOf="@+id/total_num_of_chickens"
+            app:layout_constraintTop_toBottomOf="@+id/total_num_of_chickens" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/show_bill"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_ripple_effect"
+            android:text="@string/show_bill"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toEndOf="@+id/kg_price"
+            app:layout_constraintStart_toStartOf="@+id/kg_price"
+            app:layout_constraintTop_toBottomOf="@+id/kg_price" />
+    </LinearLayout>
+</ScrollView>

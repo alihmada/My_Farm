@@ -72,12 +72,12 @@ public class NewPeriod extends DialogFragment {
     }
 
     private boolean isValidData(String count, String price) {
-        return Matcher.isNumber(count) && Matcher.isPrice(price);
+        return Matcher.isNumber(count) && Matcher.isFloatingNumber(price);
     }
 
     private void handleInputErrors() {
         validateAndSetBackground(numberOfChickens, Matcher.isNumber(numberOfChickens.getText().toString()));
-        validateAndSetBackground(priceOfAChick, Matcher.isPrice(priceOfAChick.getText().toString()));
+        validateAndSetBackground(priceOfAChick, Matcher.isFloatingNumber(priceOfAChick.getText().toString()));
         Toast.makeText(requireContext(), requireContext().getString(R.string.check_inputs), Toast.LENGTH_SHORT).show();
     }
 

@@ -2,6 +2,8 @@ package com.ali.myfarm.Data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -11,9 +13,14 @@ import com.ali.myfarm.Classes.Ciphering;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Models.Bag;
+import com.ali.myfarm.Models.Buyer;
+import com.ali.myfarm.Models.Electricity;
 import com.ali.myfarm.Models.Feed;
 import com.ali.myfarm.Models.Heating;
 import com.ali.myfarm.Models.Period;
+import com.ali.myfarm.Models.Person;
+import com.ali.myfarm.Models.Sale;
+import com.ali.myfarm.Models.Trader;
 import com.ali.myfarm.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,11 +28,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 public class Firebase {
+    private final static Handler handler = new Handler(Looper.getMainLooper());
     private static SharedPreferences sharedPreferences;
 
     public static FirebaseDatabase getInstance() {
@@ -45,15 +54,15 @@ public class Firebase {
         return getRoot(context).child(Common.FIREBASE_USERS);
     } // End getDatabase()
 
-    public static DatabaseReference getPeriods(Context context, String year) {
+    public static DatabaseReference getAllPeriods(Context context, String year) {
         return getDatabase(context).child(year);
     } // End getPeriods()
 
-    public static DatabaseReference getPeriod(Context context, String year, String periodName) {
-        return getPeriods(context, year).child(periodName);
+    public static DatabaseReference getSpecificPeriod(Context context, String year, String periodName) {
+        return getAllPeriods(context, year).child(periodName);
     } // End getPeriod()
 
-    public static DatabaseReference getRunningItemValue(Context context) {
+    public static DatabaseReference haveRunningPeriod(Context context) {
         return getDatabase(context).child(Common.RUNNING_ITEMS);
     }
 
@@ -62,18 +71,18 @@ public class Firebase {
     }
 
     public static void setPeriod(Context context, String year, Period period, FragmentManager fragmentManager) {
-        getRunningItemValue(context).addListenerForSingleValueEvent(new ValueEventListener() {
+        haveRunningPeriod(context).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     if (Boolean.FALSE.equals(snapshot.getValue(boolean.class))) {
-                        getPeriods(context, year).child(period.getName()).setValue(period);
+                        getAllPeriods(context, year).child(period.getName()).setValue(period);
                         setFeed(context, year, period.getName(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
                     } else {
-                        new Alert(R.drawable.wrong, context.getString(R.string.running_period)).show(fragmentManager, "");
+                        showAlert(fragmentManager, R.drawable.wrong, context.getString(R.string.running_period));
                     }
                 } else {
-                    getPeriods(context, year).child(period.getName()).setValue(period);
+                    getAllPeriods(context, year).child(period.getName()).setValue(period);
                     setFeed(context, year, period.getName(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
                     setRunningItemValue(context, true);
                 }
@@ -87,11 +96,11 @@ public class Firebase {
     } // End getPeriod()
 
     public static DatabaseReference getChicken(Context context, String year, String periodName) {
-        return getPeriod(context, year, periodName).child(Common.CHICKEN);
+        return getSpecificPeriod(context, year, periodName).child(Common.CHICKEN);
     }
 
     public static DatabaseReference getFeed(Context context, String year, String periodName) {
-        return getPeriod(context, year, periodName).child(Common.FEED);
+        return getSpecificPeriod(context, year, periodName).child(Common.FEED);
     }
 
     public static void setFeed(Context context, String year, String periodName, Feed feed) {
@@ -126,11 +135,98 @@ public class Firebase {
     }
 
     public static DatabaseReference getHeating(Context context, String year, String periodName) {
-        return getPeriod(context, year, periodName).child(Common.HEATING);
+        return getSpecificPeriod(context, year, periodName).child(Common.HEATING);
     }
 
     public static void setHeating(Context context, String year, String periodName, Heating heating) {
         getHeating(context, year, periodName).push().setValue(heating);
+    }
+
+    public static DatabaseReference getElectricity(Context context, String year, String periodName) {
+        return getSpecificPeriod(context, year, periodName).child(Common.ELECTRICITY);
+    }
+
+    public static void setElectricity(Context context, String year, String periodName, Electricity electricity) {
+        getElectricity(context, year, periodName).push().setValue(electricity);
+    }
+
+    public static DatabaseReference getTransactionBranchThatPeriodHave(Context context, String year, String periodName) {
+        return getSpecificPeriod(context, year, periodName).child(Common.TRANSACTION);
+    }
+
+    public static DatabaseReference getTraderBranchFromTransactionBranchThatPeriodHave(Context context, String year, String periodName) {
+        return getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.TRADERS);
+    }
+
+    public static void setTraderInTraderBranchFromTransactionBranchThatPeriodHave(Context context, String year, String periodName, Trader trader) {
+        getTraderBranchFromTransactionBranchThatPeriodHave(context, year, periodName).push().setValue(trader);
+    }
+
+    public static DatabaseReference getBuyerBranchFromTransactionBranchThatPeriodHave(Context context, String year, String periodName) {
+        return getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.BUYERS);
+    }
+
+    public static void setBuyerInTransactionBranchThatPeriodHave(Context context, String year, String periodName, Buyer buyer) {
+        getBuyerBranchFromTransactionBranchThatPeriodHave(context, year, periodName).push().setValue(buyer);
+    }
+
+    public static DatabaseReference getPersons(Context context) {
+        return getRoot(context).child(Common.PERSONS);
+    }
+
+    public static void setPerson(Context context, Person person) {
+        getPersons(context).push().setValue(person);
+    }
+
+    public static DatabaseReference getTransactionBranchThatPersonHave(DatabaseReference person) {
+        return person.child(Common.TRANSACTION);
+    }
+
+    public static void setTransactionValueInTraderThatPersonHave(DatabaseReference person, String year, String periodName) {
+        String value = String.format("%s - %s", year, periodName);
+        Query query = getTransactionBranchThatPersonHave(person).orderByValue().equalTo(value);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists())
+                    getTransactionBranchThatPersonHave(person).push().setValue(value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void setTransactionValueInBuyerThatPersonHave(DatabaseReference person, String year, String periodName) {
+        String value = String.format("%s - %s", year, periodName);
+        Query query = getTransactionBranchThatPersonHave(person).orderByValue().equalTo(value);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists())
+                    getTransactionBranchThatPersonHave(person).push().setValue(value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    public static void updateSoldValue(Context context, String year, String periodName, int oldValue, int newValue) {
+        getSpecificPeriod(context, year, periodName).child(Common.SOLD).setValue(oldValue + newValue);
+    }
+
+    public static DatabaseReference getSales(Context context, String year, String periodName) {
+        return getSpecificPeriod(context, year, periodName).child(Common.SALES);
+    }
+
+    public static void setSale(Context context, String year, String periodName, Sale sale) {
+        getSpecificPeriod(context, year, periodName).child(Common.SALES).push().setValue(sale);
     }
 
     private static void operationHandler(Context context, String year, String periodName, Bag bag, Feed.Type type, FragmentManager fragmentManager) {
@@ -152,7 +248,7 @@ public class Firebase {
                                 feed.setGrowing(bags);
                                 changeAttributes(context, year, periodName, "growing", feed.getGrowing());
                             } else {
-                                new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, "");
+                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
                             }
                         }
                     } else if (type == Feed.Type.BEGGING) {
@@ -167,7 +263,7 @@ public class Firebase {
                                 feed.setBeginning(bags);
                                 changeAttributes(context, year, periodName, "beginning", feed.getBeginning());
                             } else {
-                                new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, "");
+                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
                             }
                         }
                     } else {
@@ -182,11 +278,11 @@ public class Firebase {
                                 feed.setEnd(bags);
                                 changeAttributes(context, year, periodName, "end", feed.getEnd());
                             } else {
-                                new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, "");
+                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
                             }
                         }
                     }
-                    getPeriod(context, year, periodName).child("numberOfFeedBags").setValue(feed.getBags());
+                    getSpecificPeriod(context, year, periodName).child("numberOfFeedBags").setValue(feed.getBags());
                 } catch (Exception ignored) {
                 }
             }
@@ -226,5 +322,9 @@ public class Firebase {
 
     private static void changeAttributes(Context context, String year, String periodName, String childName, double value) {
         getFeed(context, year, periodName).child(childName).setValue(value);
+    }
+
+    private static void showAlert(FragmentManager fragmentManager, int iconResId, String message) {
+        handler.post(() -> new Alert(iconResId, message).show(fragmentManager, ""));
     }
 } //End Firebase

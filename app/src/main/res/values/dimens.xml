@@ -2,6 +2,7 @@
     <dimen name="splash_padding">50dp</dimen>
     <dimen name="corner_size">20dp</dimen>
     <dimen name="text_size">20sp</dimen>
+    <dimen name="secondary_text_size">17sp</dimen>
     <dimen name="padding">10dp</dimen>
     <dimen name="margin">10dp</dimen>
     <dimen name="margin_0.5">5dp</dimen>

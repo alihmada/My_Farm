@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.ali.myfarm.R;
 
+import java.util.Objects;
+
 public class Loading {
     private static ProgressDialog progressDialog;
 
@@ -15,7 +17,7 @@ public class Loading {
     public static void showProgressDialog() {
         progressDialog.show();
         progressDialog.setContentView(R.layout.progress_dialog);
-        progressDialog.getWindow()
+        Objects.requireNonNull(progressDialog.getWindow())
                 .setBackgroundDrawableResource(android.R.color.transparent);
     }
 

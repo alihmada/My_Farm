@@ -22,6 +22,7 @@
     <string name="search">البحث</string>
     <string name="data_not_found">لا توجد بيانات للعرض</string>
     <string name="num_of_chicks">ادخل عدد الكتاكيت</string>
+    <string name="num_of_chicken">عدد الفراخ</string>
     <string name="number_of_dead">كم النافق؟</string>
     <string name="price_of_chicks">ادخل سعر الكتكوت</string>
     <string name="complete_registration">إتمام التسجيل</string>
@@ -46,6 +47,7 @@
 
     <string name="enter_no_of_cages">العدد الكلى للأقفاص</string>
     <string name="weight_of_empty_cages">وزن الأقفاص الفارغة</string>
+    <string name="weight_of_chicken">وزن الفراخ</string>
     <string name="weight_of_full_cages">وزن الأقفاص الممتلئة</string>
     <string name="no_of_chickens">العدد الكلى للفراخ</string>
     <string name="price_of_kg">سعر الكيلوجرام</string>
@@ -63,6 +65,7 @@
 
     <string name="operation">العملية</string>
     <string name="price">السعر</string>
+    <string name="total_price">السعر الكلى</string>
     <string name="ok">موافق</string>
     <string name="chickens_no_out">الرقم الذى أدخلته أكبر من عدد الأحياء\nمن فضلك تأكد من الرقم المدخل</string>
     <string name="running_period">لديك دورة نشطة بالفعل</string>
@@ -78,4 +81,38 @@
     <string name="enter_a_price_of_cylinders">ادخل سعر الأنبوبة</string>
     <string name="enter_a_number_of_liters">ادخل عدد اللترات</string>
     <string name="enter_a_price_of_liters">ادخل سعر اللتر</string>
+    <string name="le">جنيه</string>
+    <string name="liter">لتر</string>
+    <string name="cylinder">أنبوبة</string>
+    <string name="electricity">الــكــهــربــاء</string>
+    <string name="bill">الــــفــــاتــــورة</string>
+    <string name="inputs">المدخلات</string>
+    <string name="average">المتوسط</string>
+    <string name="calcuation">الحساب</string>
+    <string name="transaction">الــمــعــامــلات</string>
+    <string name="add_new_transaction">إضافة معاملة جديدة</string>
+    <string name="person_data">اسم التاجر</string>
+    <string name="average_of_weight">متوسط وزن الفرخ</string>
+    <string name="net_weight">الوزن الصافى للفراخ</string>
+    <string name="cage">قفص</string>
+    <string name="kg">كيلوجرام</string>
+    <string name="chick">فرخ</string>
+    <string name="saved">تم الحفظ</string>
+    <string name="needed_water">كمية المياه المطلوبة باللتر</string>
+    <string name="needed_feed">كمية العلف المطلوب بالكيلوجرام</string>
+    <string name="temp">درجة الحرارة بالـ ℃</string>
+    <string name="duration_of_darkness">مدة الإظلام بالساعة</string>
+    <string name="past_days">عدد الايام الى عدت فى الدورة</string>
+    <string name="total_number_of_chickens">العدد الكلى للفراخ</string>
+    <string name="alive_no">عدد الأحياء</string>
+    <string name="dead_no">عدد الأموات</string>
+    <string name="total">العدد الكلى</string>
+    <string name="used">المستخدم</string>
+    <string name="still">المتبقى</string>
+    <string name="bag">شكارة</string>
+    <string name="buyer_header">اسم المشترى</string>
+    <string name="no_enough_chickens">لا يوجد عدد فراخ كافى لاتمام المعاملة</string>
+    <string name="remaing">المتبقى</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="edit">تعديل البيانات</string>
 </resources>

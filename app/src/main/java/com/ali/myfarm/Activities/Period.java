@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ali.myfarm.Classes.Common;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.MVVM.PeriodViewMadel;
 import com.ali.myfarm.Models.Medicine;
 import com.ali.myfarm.R;
@@ -19,9 +20,10 @@ import java.util.Objects;
 public class Period extends AppCompatActivity {
 
     Bundle bundle;
+    int numOfChickens;
     PeriodViewMadel model;
-    String mainID, periodID;
-    TextView header, numberOfChickens, feedCount;
+    String mainID, periodID, pastDay;
+    TextView header, day, numberOfChickens, feedCount;
     MaterialCardView chicks, feed, medicine, more;
 
 
@@ -46,6 +48,7 @@ public class Period extends AppCompatActivity {
 
     private void initializeViews() {
         header = findViewById(R.id.period_head);
+        day = findViewById(R.id.period_day);
         chicks = findViewById(R.id.chicken);
         feed = findViewById(R.id.feed);
         medicine = findViewById(R.id.medicine);
@@ -54,13 +57,15 @@ public class Period extends AppCompatActivity {
 
     private void initializeButtons() {
         ImageButton back = findViewById(R.id.back);
-        back.setOnClickListener(view -> {
-            onBackPressed();
-        });
+        back.setOnClickListener(view -> onBackPressed());
 
         ImageButton info = findViewById(R.id.info);
         info.setOnClickListener(view -> {
-
+            Intent intent = new Intent(this, Info.class);
+            bundle.putString(Common.N_DAY, pastDay);
+            bundle.putInt(Common.CHICKEN, numOfChickens);
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
     }
 
@@ -97,7 +102,9 @@ public class Period extends AppCompatActivity {
 
     private void setupMore() {
         more.setOnClickListener(view -> {
+            bundle.putString(Common.N_DAY, pastDay);
             bundle.putString(Common.MAIN_ID, mainID);
+            bundle.putInt(Common.CHICKEN, numOfChickens);
             bundle.putString(Common.PERIOD_ID, periodID);
 
             Intent intent = new Intent(this, More.class);
@@ -114,8 +121,16 @@ public class Period extends AppCompatActivity {
 
     private void viewHandler() {
         model.getPeriod().observe(this, period -> {
-            numberOfChickens.setText(String.valueOf(period.getNumberOfAliveChickens()));
+            numOfChickens = period.getNumberOfAliveChickens() - period.getNumberOfSold();
+            numberOfChickens.setText(String.valueOf(numOfChickens));
             feedCount.setText(String.valueOf(period.getNumberOfFeedBags()));
+            if (!Objects.equals(period.getEndDate(), "")) {
+                pastDay = DateAndTime.getPastDays(period.getEndDate(), period.getBeginningDate());
+                day.setText(pastDay);
+            } else {
+                pastDay = DateAndTime.getPastDays(DateAndTime.getCurrentDateTime(), period.getBeginningDate());
+                day.setText(pastDay);
+            }
         });
     }
 }

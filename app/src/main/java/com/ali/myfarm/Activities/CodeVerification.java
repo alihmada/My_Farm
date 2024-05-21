@@ -88,7 +88,7 @@ public class CodeVerification extends AppCompatActivity {
         };
 
         assert phone != null;
-        if (!phone.equals("")) {
+        if (!phone.isEmpty()) {
             sendVerificationCode(phone);
         }
 
@@ -97,7 +97,7 @@ public class CodeVerification extends AppCompatActivity {
             for (EditText editText : verificationDigits) {
                 code.append(editText.getText());
             }
-            if (!code.toString().equals("")) {
+            if (!code.toString().isEmpty()) {
                 codeVerification(code.toString());
                 Loading.showProgressDialog();
             }

@@ -2,6 +2,8 @@ package com.ali.myfarm.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -70,10 +72,10 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
 
     private void initializeButtons() {
         ImageButton addPeriod = findViewById(R.id.add_period);
-        addPeriod.setOnClickListener(view -> {
+        addPeriod.setOnClickListener(view -> new Handler(Looper.getMainLooper()).post(() -> {
             NewPeriod period = new NewPeriod((count, price) -> Firebase.setPeriod(this, DateAndTime.getYear(), new Period(DateAndTime.getArabicNameOfMonth(), DateAndTime.getCurrentDateTime(), "", Integer.parseInt(count), 0, 0, 0, Double.parseDouble(price)), getSupportFragmentManager()));
             period.show(getSupportFragmentManager(), "");
-        });
+        }));
 
         ImageButton menu = findViewById(R.id.menu);
         menu.setOnClickListener(view -> startActivity(new Intent(this, Menu.class)));

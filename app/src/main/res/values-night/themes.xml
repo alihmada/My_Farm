@@ -21,8 +21,10 @@
     <color name="bottom_sheet">#2B2015</color>
     <color name="tab_selected_text_color">@color/white</color>
     <color name="tab_text_color">#80FFFFFF</color>
+    <color name="tab">#B16E0A</color>
     <color name="switch_background">#D6CBBA</color>
     <color name="unselected_item">#342C1F</color>
+    <color name="stb">#141118</color>
 
     <style name="general_view">
         <item name="android:elevation">1dp</item>
@@ -94,6 +96,6 @@
     </style>
 
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">@dimen/text_size</item>
     </style>
 </resources>

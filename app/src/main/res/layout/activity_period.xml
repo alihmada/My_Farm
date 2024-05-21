@@ -14,14 +14,29 @@
 
         <TextView
             android:id="@+id/period_head"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
             android:textAlignment="center"
             android:textSize="@dimen/text_size"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/period_day"
+            app:layout_constraintEnd_toStartOf="@+id/period_day"
+            app:layout_constraintStart_toEndOf="@+id/info"
+            app:layout_constraintTop_toTopOf="@+id/period_day" />
+
+        <TextView
+            android:id="@+id/period_day"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="@dimen/margin"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/back"
-            app:layout_constraintStart_toEndOf="@+id/info"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton

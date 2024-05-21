@@ -19,6 +19,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Classes.Vibrate;
 import com.ali.myfarm.Models.Heating;
@@ -95,7 +96,7 @@ public class HeatingDialog extends DialogFragment {
 
         diesel.setOnClickListener(v -> {
             setOptionSelected(diesel, dieselCheck, gas, gasCheck);
-            setupEditText(getString(R.string.enter_a_number_of_liters), getString(R.string.enter_a_price_of_liters), InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            setupEditText(getString(R.string.enter_a_number_of_liters), getString(R.string.enter_a_price_of_liters), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         });
     }
 
@@ -124,7 +125,7 @@ public class HeatingDialog extends DialogFragment {
     }
 
     private boolean isValidInput(String value) {
-        return value.matches("\\d*\\.?\\d+$");
+        return value.matches(Common.DECIMAL_REGEX);
     }
 
     private void handleInputErrors() {

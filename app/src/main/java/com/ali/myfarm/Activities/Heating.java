@@ -1,6 +1,8 @@
 package com.ali.myfarm.Activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ali.myfarm.Adapters.HeatingAdapter;
+import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Data.Firebase;
@@ -35,7 +38,7 @@ public class Heating extends AppCompatActivity {
     private ProgressBar progressBar;
     private ConstraintLayout alert;
     private ImageView imageView;
-    private TextView textView;
+    private TextView textView, numberOfCylinders, numberOfLiters, priceOfCylinders, priceOfLiters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +61,19 @@ public class Heating extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.heating_recycler);
         recyclerView.addItemDecoration(new FirstItemMarginDecoration(getResources().getDimensionPixelSize(R.dimen.margin)));
+        numberOfCylinders = findViewById(R.id.number_of_cylinders);
+        numberOfLiters = findViewById(R.id.number_of_liters);
+        priceOfCylinders = findViewById(R.id.price_of_cylinders);
+        priceOfLiters = findViewById(R.id.price_of_liters);
     }
 
     private void initializeButtons() {
         ImageButton add = findViewById(R.id.add);
         add.setOnClickListener(view -> {
-            HeatingDialog heatingDialog = new HeatingDialog((type, number, date, price) -> Firebase.setHeating(this, mainID, periodID, new com.ali.myfarm.Models.Heating(type, number, date, price)));
-            heatingDialog.show(getSupportFragmentManager(), "");
+            new Handler(Looper.getMainLooper()).post(() -> {
+                HeatingDialog heatingDialog = new HeatingDialog((type, number, date, price) -> Firebase.setHeating(this, mainID, periodID, new com.ali.myfarm.Models.Heating(type, number, date, price)));
+                heatingDialog.show(getSupportFragmentManager(), "");
+            });
         });
 
         ImageButton back = findViewById(R.id.back);
@@ -106,6 +115,7 @@ public class Heating extends AppCompatActivity {
             if (heatingList != null) {
                 if (!heatingList.isEmpty()) {
                     setupRecyclerViewData(heatingList);
+                    setupCards(heatingList);
                     alert.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -115,6 +125,25 @@ public class Heating extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void setupCards(List<com.ali.myfarm.Models.Heating> heatingList) {
+        double cylindersCount = 0, litersCount = 0, cylindersPrice = 0, litersPrice = 0;
+
+        for (com.ali.myfarm.Models.Heating heating : heatingList) {
+            if (heating.getType() == com.ali.myfarm.Models.Heating.Type.GAS) {
+                cylindersCount += heating.getNumber();
+                cylindersPrice += Calculation.getHeatingPrice(heating.getNumber(), heating.getPrice());
+            } else {
+                litersCount += heating.getNumber();
+                litersPrice += Calculation.getHeatingPrice(heating.getNumber(), heating.getPrice());
+            }
+        }
+
+        numberOfCylinders.setText(Calculation.getNumber(cylindersCount));
+        priceOfCylinders.setText(Calculation.getNumber(cylindersPrice));
+        numberOfLiters.setText(Calculation.getNumber(litersCount));
+        priceOfLiters.setText(Calculation.getNumber(litersPrice));
     }
 
     private void setupRecyclerViewData(List<com.ali.myfarm.Models.Heating> heatingList) {

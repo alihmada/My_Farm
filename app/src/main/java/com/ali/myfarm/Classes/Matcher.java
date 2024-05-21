@@ -13,7 +13,12 @@ public class Matcher {
         return number.matches("[0-9]+");
     }
 
-    public static boolean isPrice(String price) {
+    public static boolean isFloatingNumber(String price) {
         return price.matches("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
+    }
+
+    public static boolean isOperation(String operation) {
+        // ^([+\-*/]?\d+\.?\d*)([+\-*/])([+\-*/]?\d+\.?\d*)*([+\-*/])$
+        return operation.matches("[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?(?:\\s*[+\\-*/]\\s*[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)+");
     }
 }

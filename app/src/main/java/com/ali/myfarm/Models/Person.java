@@ -39,8 +39,12 @@ public class Person extends User {
         this.forMe = forMe;
     }
 
+    public String getFullName() {
+        return String.format("%s %s", getFirstName(),
+                getLastName());
+    }
+
     public static enum Type {
-        BUYER,
-        TRADER
+        BUYER, TRADER, SUPPLIER
     }
 }

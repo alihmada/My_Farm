@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/margin"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="@dimen/secondary_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/num"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,30 +62,51 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding">
 
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_margin="@dimen/margin_0.5"
-                        android:src="@drawable/dead"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin"
+                        android:gravity="center"
+                        android:text="@string/dead_no"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView22"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/dead_num"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin"
                         android:gravity="center"
-                        android:textSize="15sp"
+                        android:text="@string/chick"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintBottom_toBottomOf="@+id/dead_num"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/dead_num" />
+
+                    <TextView
+                        android:id="@+id/dead_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_0.5"
+                        android:gravity="center"
+                        android:maxLength="5"
+                        android:textSize="@dimen/text_size"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-                        app:layout_constraintStart_toStartOf="@+id/imageView6"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                        app:layout_constraintEnd_toEndOf="@+id/textView15"
+                        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                    <ImageView
+                        android:id="@+id/imageView22"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/dead"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -93,7 +114,7 @@
                 android:id="@+id/growing"
                 style="@style/outlinedCardViewStyleWithoutMargin"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
@@ -102,30 +123,51 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding">
 
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_margin="@dimen/margin_0.5"
-                        android:src="@drawable/happy"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin"
+                        android:gravity="center"
+                        android:text="@string/alive_no"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView21"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/alive_num"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin"
                         android:gravity="center"
-                        android:textSize="15sp"
+                        android:text="@string/chick"
+                        android:textSize="@dimen/secondary_text_size"
+                        app:layout_constraintBottom_toBottomOf="@+id/alive_num"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/alive_num" />
+
+                    <TextView
+                        android:id="@+id/alive_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_0.5"
+                        android:gravity="center"
+                        android:maxLength="5"
+                        android:textSize="@dimen/text_size"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView5"
-                        app:layout_constraintStart_toStartOf="@+id/imageView5"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                        app:layout_constraintEnd_toEndOf="@+id/textView14"
+                        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+                    <ImageView
+                        android:id="@+id/imageView21"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/happy"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
