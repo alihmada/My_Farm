@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ali.myfarm.Adapters.EndAdapter;
 import com.ali.myfarm.Adapters.GrowingAdapter;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Intenet.Internet;
@@ -112,7 +113,7 @@ public class End extends Fragment {
     }
 
     private void setupRecyclerViewData(List<Bag> bags) {
-        GrowingAdapter adapter = new GrowingAdapter(bags);
+        EndAdapter adapter = new EndAdapter(bags);
         recyclerView.setAdapter(adapter);
     }
 

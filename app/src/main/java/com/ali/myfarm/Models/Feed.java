@@ -84,7 +84,7 @@ public class Feed {
         return getPriceOfGrowing() + getPriceOfBeginning() + getPriceOfEnd();
     }
 
-    public static enum Type {
+    public enum Type {
         GROWING, BEGGING, END
-    }
+    } // BEGINNING
 }

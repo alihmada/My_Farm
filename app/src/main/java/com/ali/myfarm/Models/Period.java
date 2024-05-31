@@ -47,6 +47,10 @@ public class Period implements Serializable {
         return numberOfDead;
     }
 
+    public void setNumberOfDead(int numberOfDead) {
+        this.numberOfDead = numberOfDead;
+    }
+
     public int getNumberOfSold() {
         return numberOfSold;
     }

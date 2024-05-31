@@ -24,8 +24,8 @@
             android:textSize="@dimen/text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tab_layout"
-            app:layout_constraintEnd_toStartOf="@+id/back"
-            app:layout_constraintStart_toEndOf="@+id/add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -44,10 +44,21 @@
             android:id="@+id/add"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="10dp"
             android:background="@drawable/button_ripple_effect"
             android:contentDescription="@string/app_name"
             android:src="@drawable/add"
+            app:layout_constraintBottom_toBottomOf="@+id/info"
+            app:layout_constraintStart_toEndOf="@+id/info"
+            app:layout_constraintTop_toTopOf="@+id/info" />
+
+        <ImageButton
+            android:id="@+id/info"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/button_ripple_effect"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/info"
             app:layout_constraintBottom_toTopOf="@+id/tab_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

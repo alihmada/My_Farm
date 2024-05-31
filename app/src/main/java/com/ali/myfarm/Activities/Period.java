@@ -62,7 +62,7 @@ public class Period extends AppCompatActivity {
         ImageButton info = findViewById(R.id.info);
         info.setOnClickListener(view -> {
             Intent intent = new Intent(this, Info.class);
-            bundle.putString(Common.N_DAY, pastDay);
+            bundle.putString(Common.N_DAY, Objects.equals(pastDay, "0") ? "1" : pastDay);
             bundle.putInt(Common.CHICKEN, numOfChickens);
             intent.putExtras(bundle);
             startActivity(intent);

@@ -38,6 +38,29 @@ public class Repository {
         return instance;
     }
 
+    public MutableLiveData<String> getName(Context context) {
+        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
+
+        Firebase.getRoot(context).child("name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String string = dataSnapshot.getValue(String.class);
+                    assert string != null;
+                    mutableLiveData.setValue(string);
+                } else mutableLiveData.setValue(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+
+
+        return mutableLiveData;
+    }
+
     public MutableLiveData<List<String>> getYears(Context context) {
         MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
 

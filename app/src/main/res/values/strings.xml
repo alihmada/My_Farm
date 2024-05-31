@@ -112,7 +112,11 @@
     <string name="bag">شكارة</string>
     <string name="buyer_header">اسم المشترى</string>
     <string name="no_enough_chickens">لا يوجد عدد فراخ كافى لاتمام المعاملة</string>
+    <string name="no_enough_chicken">لا يوجد عدد فراخ كافى لاتمام العملية</string>
     <string name="remaing">المتبقى</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="edit">تعديل البيانات</string>
+    <string name="medicine">الأدوية</string>
+    <string name="suppliers">الموردين</string>
+    <string name="name">اسم المزرعة</string>
 </resources>

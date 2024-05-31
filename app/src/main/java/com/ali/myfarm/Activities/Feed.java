@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,6 +17,7 @@ import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Classes.Vibrate;
 import com.ali.myfarm.Data.Firebase;
+import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Dialogs.FeedStatus;
 import com.ali.myfarm.Dialogs.PopupFeed;
 import com.ali.myfarm.Fragments.Beginning;
@@ -37,36 +38,70 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Feed extends AppCompatActivity {
 
-    Bundle bundle;
-    TextView header;
-    String mainID, periodID;
-    FeedViewModel model;
-    GrowingViewModel growingViewModel;
-    BeginningViewModel beginningViewModel;
-    EndViewModel endViewModel;
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    private TextView header;
+    private Handler handler;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private FeedViewModel feedViewModel;
+    private String mainID, periodID;
+    private EndViewModel endViewModel;
+    private GrowingViewModel growingViewModel;
+    private BeginningViewModel beginningViewModel;
+    private com.ali.myfarm.Models.Feed feed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        bundle = new Bundle();
-        header = findViewById(R.id.feed_header);
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
-        header.setText(String.format("%s - %s", periodID, mainID));
-        tabLayout = findViewById(R.id.tab_layout);
-        viewPager = findViewById(R.id.view_pager);
-
-        setupViewModel();
-        setupGrowingViewModel();
-        setupInitialViewModel();
-        setupEndViewModel();
+        initializeFields();
+        initializeViewModels();
+        setupHeader();
         setupViewPager();
         initializeCardsText();
         initializeButtons();
+    }
+
+    private void initializeFields() {
+        handler = new Handler(Looper.getMainLooper());
+        header = findViewById(R.id.feed_header);
+        tabLayout = findViewById(R.id.tab_layout);
+        viewPager = findViewById(R.id.view_pager);
+
+        Bundle extras = Objects.requireNonNull(getIntent().getExtras());
+        mainID = extras.getString(Common.MAIN_ID);
+        periodID = extras.getString(Common.PERIOD_ID);
+    }
+
+    private void initializeViewModels() {
+        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
+        feedViewModel.initialize(this, mainID, periodID);
+
+        growingViewModel = new ViewModelProvider(this).get(GrowingViewModel.class);
+        growingViewModel.initialize(this, mainID, periodID);
+
+        beginningViewModel = new ViewModelProvider(this).get(BeginningViewModel.class);
+        beginningViewModel.initialize(this, mainID, periodID);
+
+        endViewModel = new ViewModelProvider(this).get(EndViewModel.class);
+        endViewModel.initialize(this, mainID, periodID);
+    }
+
+    private void setupHeader() {
+        header.setText(String.format("%s - %s", periodID, mainID));
+    }
+
+    private void setupViewPager() {
+        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(
+                getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        adapter.addFragment(new End(mainID, periodID), getString(R.string.over));
+        adapter.addFragment(new Beginning(mainID, periodID), getString(R.string.growing));
+        adapter.addFragment(new Growing(mainID, periodID), getString(R.string.initialize));
+
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+        TabLayout.Tab growingTab = tabLayout.getTabAt(2);
+        if (growingTab != null) growingTab.select();
     }
 
     private void initializeCardsText() {
@@ -78,30 +113,34 @@ public class Feed extends AppCompatActivity {
         TextView beginningTxt = findViewById(R.id.initialize_txt);
         TextView endTxt = findViewById(R.id.end_txt);
 
-        model.getFeed().observe(this, feed -> {
-            growing.set(feed.getGrowing());
-            growingTxt.setText(String.valueOf(growing.get()));
-            initialize.set(feed.getBeginning());
-            beginningTxt.setText(String.valueOf(initialize));
-            end.set(feed.getEnd());
-            endTxt.setText(String.valueOf(end.get()));
+        feedViewModel.getFeed().observe(this, feed -> {
+            this.feed = feed;
+            updateCardText(growing, growingTxt, feed.getGrowing());
+            updateCardText(initialize, beginningTxt, feed.getBeginning());
+            updateCardText(end, endTxt, feed.getEnd());
         });
 
-        initializeCardsOnLongClick(growing, initialize, end);
+        setupCardsOnLongClick(growing, initialize, end);
     }
 
-    private void initializeCardsOnLongClick(AtomicInteger growing, AtomicInteger initialize, AtomicInteger end) {
+    private void updateCardText(AtomicInteger value, TextView textView, int newValue) {
+        value.set(newValue);
+        textView.setText(String.valueOf(value.get()));
+    }
+
+    private void setupCardsOnLongClick(AtomicInteger growing, AtomicInteger initialize, AtomicInteger end) {
         MaterialCardView growingCard = findViewById(R.id.growing);
         MaterialCardView initializeCard = findViewById(R.id.initiator);
         MaterialCardView endCard = findViewById(R.id.end);
 
         View.OnLongClickListener onLongClickListener = v -> {
-            if (v.getId() == R.id.growing) {
-                growingViewModel.getGrowing().observe(Feed.this, bags -> handelFeedDetails(bags, growing, R.drawable.growing));
-            } else if (v.getId() == R.id.initiator) {
-                beginningViewModel.getBeginning().observe(Feed.this, bags -> handelFeedDetails(bags, initialize, R.drawable.initialize));
-            } else {
-                endViewModel.getEnd().observe(Feed.this, bags -> handelFeedDetails(bags, end, R.drawable.end));
+            int id = v.getId();
+            if (id == R.id.growing) {
+                observeViewModel(growingViewModel.getGrowing(), growing, R.drawable.growing);
+            } else if (id == R.id.initiator) {
+                observeViewModel(beginningViewModel.getBeginning(), initialize, R.drawable.initialize);
+            } else if (id == R.id.end) {
+                observeViewModel(endViewModel.getEnd(), end, R.drawable.end);
             }
             return false;
         };
@@ -111,69 +150,77 @@ public class Feed extends AppCompatActivity {
         endCard.setOnLongClickListener(onLongClickListener);
     }
 
-    private void handelFeedDetails(List<Bag> bags, AtomicInteger exist, int image) {
-        AtomicInteger total = new AtomicInteger();
+    private void observeViewModel(LiveData<List<Bag>> liveData, AtomicInteger currentCount, int imageResource) {
+        liveData.observe(this, bags -> handleFeedDetails(bags, currentCount, imageResource));
+    }
 
+    private void handleFeedDetails(List<Bag> bags, AtomicInteger currentCount, int imageResource) {
+        AtomicInteger total = new AtomicInteger();
         if (bags != null) {
-            for (Bag bag : bags)
-                if (bag.getOperation() == Bag.Operation.ADD) total.addAndGet(bag.getNumber());
+            for (Bag bag : bags) {
+                if (bag.getOperation() == Bag.Operation.ADD) {
+                    total.addAndGet(bag.getNumber());
+                }
+            }
         }
+
         new Handler(Looper.getMainLooper()).post(() -> {
-            PopupFeed popupFeed = new PopupFeed(image, String.valueOf(total.get()), String.valueOf(total.get() - exist.get()), String.valueOf(exist.get()));
+            PopupFeed popupFeed = new PopupFeed(
+                    imageResource,
+                    String.valueOf(total.get()),
+                    String.valueOf(total.get() - currentCount.get()),
+                    String.valueOf(currentCount.get())
+            );
             popupFeed.show(getSupportFragmentManager(), "");
             Vibrate.vibrate(Feed.this);
         });
     }
 
     private void initializeButtons() {
-        ImageButton record = findViewById(R.id.record);
-        record.setOnClickListener(view -> new Handler(Looper.getMainLooper()).post(() -> {
-            FeedStatus status = new FeedStatus((type, operation, numberOfBags, priceOfTon) -> {
-                if (type == com.ali.myfarm.Models.Feed.Type.GROWING) {
-                    Firebase.setGrowing(Feed.this, mainID, periodID, new Bag(numberOfBags, priceOfTon, operation, DateAndTime.getCurrentDateTime()), getSupportFragmentManager());
-                } else if (type == com.ali.myfarm.Models.Feed.Type.BEGGING) {
-                    Firebase.setInitialize(Feed.this, mainID, periodID, new Bag(numberOfBags, priceOfTon, operation, DateAndTime.getCurrentDateTime()), getSupportFragmentManager());
-                } else {
-                    Firebase.setEnd(Feed.this, mainID, periodID, new Bag(numberOfBags, priceOfTon, operation, DateAndTime.getCurrentDateTime()), getSupportFragmentManager());
-                }
-            });
-            status.show(getSupportFragmentManager(), "");
-        }));
-
-        ImageButton back = findViewById(R.id.back);
-        back.setOnClickListener(view -> onBackPressed());
+        findViewById(R.id.record).setOnClickListener(view -> handler.post(this::showFeedStatusDialog));
+        findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
     }
 
-    private void setupViewModel() {
-        model = new ViewModelProvider(this).get(FeedViewModel.class);
-        model.initialize(this, mainID, periodID);
+    private void showFeedStatusDialog() {
+        FeedStatus status = new FeedStatus((type, operation, numberOfBags, priceOfTon) -> {
+            if (isValidOperation(type, numberOfBags)) {
+                executeFirebaseOperation(type, numberOfBags, priceOfTon, operation);
+            } else {
+                showAlert(R.drawable.error, getString(R.string.bags_num_out));
+            }
+        });
+        status.show(getSupportFragmentManager(), "");
     }
 
-    private void setupGrowingViewModel() {
-        growingViewModel = new ViewModelProvider(this).get(GrowingViewModel.class);
-        growingViewModel.initialize(this, mainID, periodID);
+    private boolean isValidOperation(com.ali.myfarm.Models.Feed.Type type, int numberOfBags) {
+        switch (type) {
+            case GROWING:
+                return feed.getGrowing() - numberOfBags >= 0;
+            case BEGGING:
+                return feed.getBeginning() - numberOfBags >= 0;
+            case END:
+                return feed.getEnd() - numberOfBags >= 0;
+            default:
+                return false;
+        }
     }
 
-    private void setupInitialViewModel() {
-        beginningViewModel = new ViewModelProvider(this).get(BeginningViewModel.class);
-        beginningViewModel.initialize(this, mainID, periodID);
+    private void executeFirebaseOperation(com.ali.myfarm.Models.Feed.Type type, int numberOfBags, double priceOfTon, Bag.Operation operation) {
+        Bag bag = new Bag(numberOfBags, priceOfTon, operation, DateAndTime.getCurrentDateTime());
+        switch (type) {
+            case GROWING:
+                Firebase.setGrowing(this, mainID, periodID, bag);
+                break;
+            case BEGGING:
+                Firebase.setInitialize(this, mainID, periodID, bag);
+                break;
+            case END:
+                Firebase.setEnd(this, mainID, periodID, bag);
+                break;
+        }
     }
 
-    private void setupEndViewModel() {
-        endViewModel = new ViewModelProvider(this).get(EndViewModel.class);
-        endViewModel.initialize(this, mainID, periodID);
-    }
-
-    private void setupViewPager() {
-        tabLayout.setupWithViewPager(viewPager);
-
-        FragmentViewPagerAdapter ordersViewPagerAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        ordersViewPagerAdapter.addFragment(new End(mainID, periodID), getString(R.string.over));
-        ordersViewPagerAdapter.addFragment(new Beginning(mainID, periodID), getString(R.string.growing));
-        ordersViewPagerAdapter.addFragment(new Growing(mainID, periodID), getString(R.string.initialize));
-
-        viewPager.setAdapter(ordersViewPagerAdapter);
-        TabLayout.Tab growing = tabLayout.getTabAt(2);
-        if (growing != null) growing.select();
+    private void showAlert(int icon, String message) {
+        handler.post(() -> new Alert(icon, message).show(getSupportFragmentManager(), ""));
     }
 }

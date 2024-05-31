@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -119,19 +120,19 @@ public class Firebase {
         return getFeed(context, year, periodName).child(Common.END);
     }
 
-    public static void setGrowing(Context context, String year, String periodName, Bag bag, FragmentManager fragmentManager) {
+    public static void setGrowing(Context context, String year, String periodName, Bag bag) {
         getGrowing(context, year, periodName).push().setValue(bag);
-        operationHandler(context, year, periodName, bag, Feed.Type.GROWING, fragmentManager);
+        operationHandler(context, year, periodName, bag, Feed.Type.GROWING);
     }
 
-    public static void setInitialize(Context context, String year, String periodName, Bag bag, FragmentManager fragmentManager) {
+    public static void setInitialize(Context context, String year, String periodName, Bag bag) {
         getInitialize(context, year, periodName).push().setValue(bag);
-        operationHandler(context, year, periodName, bag, Feed.Type.BEGGING, fragmentManager);
+        operationHandler(context, year, periodName, bag, Feed.Type.BEGGING);
     }
 
-    public static void setEnd(Context context, String year, String periodName, Bag bag, FragmentManager fragmentManager) {
+    public static void setEnd(Context context, String year, String periodName, Bag bag) {
         getEnd(context, year, periodName).push().setValue(bag);
-        operationHandler(context, year, periodName, bag, Feed.Type.END, fragmentManager);
+        operationHandler(context, year, periodName, bag, Feed.Type.END);
     }
 
     public static DatabaseReference getHeating(Context context, String year, String periodName) {
@@ -229,69 +230,62 @@ public class Firebase {
         getSpecificPeriod(context, year, periodName).child(Common.SALES).push().setValue(sale);
     }
 
-    private static void operationHandler(Context context, String year, String periodName, Bag bag, Feed.Type type, FragmentManager fragmentManager) {
+    private static void operationHandler(Context context, String year, String periodName, Bag bag, Feed.Type type) {
         getFeed(context, year, periodName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
                     Feed feed = snapshot.getValue(Feed.class);
-                    assert feed != null;
-                    if (type == Feed.Type.GROWING) {
-                        if (bag.getOperation() == Bag.Operation.ADD) {
-                            feed.setGrowing(feed.getGrowing() + bag.getNumber());
-                            feed.setPriceOfGrowing(feed.getPriceOfGrowing() + Calculation.getBagsPrice(bag.getNumber(), bag.getPriceOfTon()));
-                            changeAttributes(context, year, periodName, "growing", feed.getGrowing());
-                            changeAttributes(context, year, periodName, "priceOfGrowing", feed.getPriceOfGrowing());
-                        } else {
-                            int bags = feed.getGrowing() - bag.getNumber();
-                            if (bags >= 0) {
-                                feed.setGrowing(bags);
-                                changeAttributes(context, year, periodName, "growing", feed.getGrowing());
-                            } else {
-                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
-                            }
-                        }
-                    } else if (type == Feed.Type.BEGGING) {
-                        if (bag.getOperation() == Bag.Operation.ADD) {
-                            feed.setBeginning(feed.getBeginning() + bag.getNumber());
-                            feed.setPriceOfBeginning(feed.getPriceOfBeginning() + Calculation.getBagsPrice(bag.getNumber(), bag.getPriceOfTon()));
-                            changeAttributes(context, year, periodName, "beginning", feed.getBeginning());
-                            changeAttributes(context, year, periodName, "priceOfBeginning", feed.getPriceOfBeginning());
-                        } else {
-                            int bags = feed.getBeginning() - bag.getNumber();
-                            if (bags >= 0) {
-                                feed.setBeginning(bags);
-                                changeAttributes(context, year, periodName, "beginning", feed.getBeginning());
-                            } else {
-                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
-                            }
-                        }
-                    } else {
-                        if (bag.getOperation() == Bag.Operation.ADD) {
-                            feed.setEnd(feed.getEnd() + bag.getNumber());
-                            feed.setPriceOfEnd(feed.getPriceOfEnd() + Calculation.getBagsPrice(bag.getNumber(), bag.getPriceOfTon()));
-                            changeAttributes(context, year, periodName, "end", feed.getEnd());
-                            changeAttributes(context, year, periodName, "priceOfEnd", feed.getPriceOfEnd());
-                        } else {
-                            int bags = feed.getEnd() - bag.getNumber();
-                            if (bags >= 0) {
-                                feed.setEnd(bags);
-                                changeAttributes(context, year, periodName, "end", feed.getEnd());
-                            } else {
-                                handler.post(() -> new Alert(R.drawable.error_p, context.getString(R.string.bags_num_out)).show(fragmentManager, ""));
-                            }
-                        }
+                    if (feed == null) throw new IllegalArgumentException("Feed data is null");
+
+                    boolean isAddOperation = bag.getOperation() == Bag.Operation.ADD;
+                    int bagNumber = bag.getNumber();
+                    double bagPrice = Calculation.getBagsPrice(bagNumber, bag.getPriceOfTon());
+
+                    switch (type) {
+                        case GROWING:
+                            updateFeedAttributes(context, year, periodName, "growing", isAddOperation, bagNumber, bagPrice, feed.getGrowing(), feed.getPriceOfGrowing());
+                            break;
+                        case BEGGING:
+                            updateFeedAttributes(context, year, periodName, "beginning", isAddOperation, bagNumber, bagPrice, feed.getBeginning(), feed.getPriceOfBeginning());
+                            break;
+                        case END:
+                            updateFeedAttributes(context, year, periodName, "end", isAddOperation, bagNumber, bagPrice, feed.getEnd(), feed.getPriceOfEnd());
+                            break;
                     }
+
                     getSpecificPeriod(context, year, periodName).child("numberOfFeedBags").setValue(feed.getBags());
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Log.e("operationHandler", "Error handling feed operation", e);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e("operationHandler", "Database operation cancelled", error.toException());
             }
         });
+    }
+
+    private static void updateFeedAttributes(Context context, String year, String periodName, String attributePrefix, boolean isAddOperation, int bagNumber, double bagPrice, int currentBags, double currentPrice) {
+        if (isAddOperation) {
+            currentBags += bagNumber;
+            currentPrice += bagPrice;
+            changeAttributes(context, year, periodName, attributePrefix, currentBags);
+            changeAttributes(context, year, periodName, "priceOf" + capitalize(attributePrefix), currentPrice);
+        } else {
+            currentBags -= bagNumber;
+            if (currentBags >= 0) {
+                changeAttributes(context, year, periodName, attributePrefix, currentBags);
+            }
+        }
+    }
+
+    private static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
     public static FirebaseAuth getFirebaseAuth() {

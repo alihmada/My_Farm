@@ -28,6 +28,7 @@ import com.ali.myfarm.Data.Firebase;
 import com.ali.myfarm.Dialogs.NewPeriod;
 import com.ali.myfarm.Intenet.Internet;
 import com.ali.myfarm.Interfaces.ViewOnClickListener;
+import com.ali.myfarm.MVVM.NameViewModel;
 import com.ali.myfarm.MVVM.YearsViewModel;
 import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.R;
@@ -37,13 +38,14 @@ import java.util.List;
 public class Main extends AppCompatActivity implements ViewOnClickListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private NameViewModel nameViewModel;
     private RecyclerView recyclerView;
     private MainAdapter mainAdapter;
     private ProgressBar progressBar;
+    private TextView textView, name;
     private ConstraintLayout alert;
     private YearsViewModel model;
     private ImageView imageView;
-    private TextView textView;
     private EditText search;
     private Bundle bundle;
 
@@ -53,6 +55,8 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
         setContentView(R.layout.activity_main);
 
         bundle = new Bundle();
+        setupNameViewModel();
+        setName();
         initializeViews();
         initializeButtons();
         setupViewModel();
@@ -62,6 +66,7 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
     }
 
     private void initializeViews() {
+        name = findViewById(R.id.name);
         alert = findViewById(R.id.alert);
         imageView = findViewById(R.id.alert_image);
         textView = findViewById(R.id.alert_text);
@@ -150,9 +155,25 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
 
     }
 
+    private void setName() {
+        nameViewModel.getName().observe(this, name -> {
+            if (name != null) {
+                this.name.setText(name);
+            } else {
+                this.name.setText(getString(R.string.app_name));
+            }
+        });
+
+    }
+
     private void setupViewModel() {
         model = new ViewModelProvider(this).get(YearsViewModel.class);
         model.initialize(this);
+    }
+
+    private void setupNameViewModel() {
+        nameViewModel = new ViewModelProvider(this).get(NameViewModel.class);
+        nameViewModel.initialize(this);
     }
 
     private void setupRecyclerViewData(List<String> yearList) {

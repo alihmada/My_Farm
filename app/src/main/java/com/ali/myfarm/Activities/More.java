@@ -54,7 +54,7 @@ public class More extends AppCompatActivity {
         ImageButton info = findViewById(R.id.info);
         info.setOnClickListener(view -> {
             Intent intent = new Intent(this, Info.class);
-            bundle.putString(Common.N_DAY, nDay);
+            bundle.putString(Common.N_DAY, Objects.equals(nDay, "0") ? "1" : nDay);
             bundle.putInt(Common.CHICKEN, numOfChickens);
             intent.putExtras(bundle);
             startActivity(intent);

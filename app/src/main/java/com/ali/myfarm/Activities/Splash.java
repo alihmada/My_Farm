@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ali.myfarm.Classes.Ciphering;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Data.Firebase;
+import com.ali.myfarm.Models.Farm;
 import com.ali.myfarm.Models.User;
 import com.ali.myfarm.R;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Splash extends AppCompatActivity {
 

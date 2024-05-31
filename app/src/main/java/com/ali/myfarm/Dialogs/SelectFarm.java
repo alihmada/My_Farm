@@ -1,6 +1,8 @@
 package com.ali.myfarm.Dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,42 +25,42 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ali.myfarm.Adapters.PersonsAdapter;
+import com.ali.myfarm.Adapters.FarmsAdapter;
+import com.ali.myfarm.Classes.Ciphering;
+import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
-import com.ali.myfarm.Data.Firebase;
 import com.ali.myfarm.Intenet.Internet;
 import com.ali.myfarm.Interfaces.ViewOnClickListener;
-import com.ali.myfarm.MVVM.PersonsViewModel;
-import com.ali.myfarm.Models.Person;
+import com.ali.myfarm.Models.Farm;
 import com.ali.myfarm.R;
+import com.google.gson.Gson;
 
 import java.util.List;
 
-public class SelectPerson extends DialogFragment implements ViewOnClickListener {
+public class SelectFarm extends DialogFragment implements ViewOnClickListener {
 
-    private Person.Type type;
-    private PersonsViewModel model;
-    private PersonsAdapter personAdapter;
-    private SelectPersonListener listener;
+    private FarmsAdapter farmsAdapter;
+    private SelectFarmListener listener;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ConstraintLayout alert;
     private ImageView imageView;
     private TextView textView;
+    private List<Farm> farms;
     private EditText search;
     private Handler handler;
 
-    public SelectPerson() {
+    public SelectFarm() {
     }
 
-    public SelectPerson(Person.Type type, SelectPersonListener listener) {
+    public SelectFarm(List<Farm> farms, SelectFarmListener listener) {
+        this.farms = farms;
         this.listener = listener;
-        this.type = type;
     }
 
     @NonNull
@@ -73,9 +75,9 @@ public class SelectPerson extends DialogFragment implements ViewOnClickListener 
         initializeViews(dialog);
         setupAddButton(dialog);
         setupSearch(dialog);
-        setupViewModel();
         setupView();
         setupSwipeRefreshLayout(dialog);
+        setupSharedPreferences();
 
         Window window = dialog.getWindow();
         if (window != null) {
@@ -127,27 +129,25 @@ public class SelectPerson extends DialogFragment implements ViewOnClickListener 
     }
 
     private void setRecyclerView() {
-        model.getPersons().observe(requireActivity(), personList -> {
-            if (personList != null) {
-                setupRecyclerViewData(personList);
-                if (!personList.isEmpty()) {
-                    search.setEnabled(true);
-                    alert.setVisibility(View.GONE);
-                } else {
-                    alert.setVisibility(View.VISIBLE);
-                }
+        if (farms != null) {
+            setupRecyclerViewData(farms);
+            if (!farms.isEmpty()) {
+                search.setEnabled(true);
+                alert.setVisibility(View.GONE);
             } else {
-                search.setEnabled(false);
                 alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
             }
-            progressBar.setVisibility(View.GONE);
-        });
+        } else {
+            search.setEnabled(false);
+            alert.setVisibility(View.VISIBLE);
+            textView.setText(getString(R.string.data_not_found));
+        }
+        progressBar.setVisibility(View.GONE);
     }
 
-    private void setupRecyclerViewData(List<Person> personList) {
-        personAdapter = new PersonsAdapter(this, personList);
-        recyclerView.setAdapter(personAdapter);
+    private void setupRecyclerViewData(List<Farm> farms) {
+        farmsAdapter = new FarmsAdapter(this, farms);
+        recyclerView.setAdapter(farmsAdapter);
     }
 
     private void setupSearch(Dialog dialog) {
@@ -163,33 +163,39 @@ public class SelectPerson extends DialogFragment implements ViewOnClickListener 
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (personAdapter != null) {
-                    personAdapter.getFilter().filter(s);
+                if (farmsAdapter != null) {
+                    farmsAdapter.getFilter().filter(s);
                 }
             }
         });
     }
 
+    private void setupSharedPreferences() {
+        try {
+            sharedPreferences = requireContext().getSharedPreferences(Ciphering.decrypt(Common.SHARED_PREFERENCE_NAME), Context.MODE_PRIVATE);
+        } catch (Exception ignored) {
+        }
+    }
+
     private void setupAddButton(Dialog dialog) {
         ImageButton add = dialog.findViewById(R.id.add);
         add.setOnClickListener(v -> handler.post(() -> {
-            AddNewUser newUser = new AddNewUser((firstName, lastName, phone, type) -> Firebase.setPerson(requireContext(), new Person(firstName, lastName, phone, type, 0.0, 0.0)));
-            newUser.show(getParentFragmentManager(), "");
+            AddNewFarm addNewFarm = new AddNewFarm((root, name) -> {
+                farms.add(new Farm(root, name));
+                sharedPreferences.edit().putString(Common.ACCOUNTS, new Gson().toJson(farms)).apply();
+                setupRecyclerViewData(farms);
+            });
+            addNewFarm.show(getParentFragmentManager(), "");
         }));
     }
 
-    private void setupViewModel() {
-        model = new ViewModelProvider(requireActivity()).get(PersonsViewModel.class);
-        model.initialize(requireContext(), type);
+    public interface SelectFarmListener {
+        void onDataEntered(String root);
     }
 
     @Override
-    public void onClickListener(String name) {
-        listener.onDataEntered(name);
+    public void onClickListener(String root) {
+        listener.onDataEntered(root);
         dismiss();
-    }
-
-    public interface SelectPersonListener {
-        void onDataEntered(String name);
     }
 }

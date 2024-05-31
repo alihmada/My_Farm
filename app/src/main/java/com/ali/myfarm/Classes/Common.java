@@ -5,6 +5,7 @@ public class Common {
     public static final String DATABASE_NAME = "Database";
     public static final String FIREBASE_USERS = "Users";
     public static final String USER_DATA = "user_data";
+    public static final String ACCOUNTS = "accounts";
 
     public static final String FARM_ID = "farm_id";
     public static final String SHARED_PREFERENCE_NAME = "e4aE9coc2cY=";
