@@ -2,7 +2,7 @@ package com.ali.myfarm.Classes;
 
 public class Matcher {
     public static boolean isUserName(String userName) {
-        return userName.matches("^[a-zA-Zء-ي]?/?\\s?+(([a-zA-Zء-ي]{3,10})(?:\\s|$)){1,6}$");
+        return !userName.matches("^[a-zA-Zء-ي]?/?\\s?+(([a-zA-Zء-ي]{3,10})(?:\\s|$)){1,6}$");
     }
 
     public static boolean isPhoneNumber(String phoneNumber) {

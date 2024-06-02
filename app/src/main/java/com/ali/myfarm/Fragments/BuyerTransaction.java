@@ -148,7 +148,7 @@ public class BuyerTransaction extends Fragment {
         EditText weightOfChickens = view.findViewById(R.id.weight_of_chicken);
         EditText kgPrice = view.findViewById(R.id.price_of_kg);
 
-        boolean isValidName = setInputError(!Matcher.isUserName(String.valueOf(name.getText())), pressToAdd);
+        boolean isValidName = setInputError(Matcher.isUserName(String.valueOf(name.getText())), pressToAdd);
         boolean isValidNumberOfCages = setInputError(numberOfChickensParent, !Matcher.isNumber(String.valueOf(numberOfChickens.getText())));
         boolean isValidWeightOfEmptyCages = setInputError(weightOfChickensParent, !Matcher.isFloatingNumber(String.valueOf(weightOfChickens.getText())));
         boolean isValidKgPrice = setInputError(kgPrice, !Matcher.isFloatingNumber(String.valueOf(kgPrice.getText())));

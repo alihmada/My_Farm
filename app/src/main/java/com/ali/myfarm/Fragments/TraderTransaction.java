@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -64,8 +63,7 @@ public class TraderTransaction extends Fragment {
 
     private void setupShowBill(View view) {
         Gson gson = new Gson();
-        Button showBill = view.findViewById(R.id.show_bill);
-        showBill.setOnClickListener(v -> {
+        view.findViewById(R.id.show_bill).setOnClickListener(v -> {
             if (isValidInputs(view)) {
                 Intent intent = new Intent(requireContext(), Bill.class);
                 bundle.putString(Common.MOVED_DATA, gson.toJson(transaction));
@@ -156,7 +154,7 @@ public class TraderTransaction extends Fragment {
         EditText numberOfChicken = view.findViewById(R.id.total_num_of_chicken);
         EditText kgPrice = view.findViewById(R.id.kg_price);
 
-        boolean isValidName = setInputError(!Matcher.isUserName(String.valueOf(name.getText())), pressToAdd);
+        boolean isValidName = setInputError(Matcher.isUserName(String.valueOf(name.getText())), pressToAdd);
         boolean isValidNumberOfCages = setInputError(numberOfCagesParent, !Matcher.isNumber(String.valueOf(numberOfCages.getText())));
         boolean isValidWeightOfEmptyCages = setInputError(weightOfEmptyCagesParent, !Matcher.isFloatingNumber(String.valueOf(weightOfEmptyCages.getText())));
         boolean isValidWeightOfFullCages = setInputError(weightOfFullCagesParent, !Matcher.isFloatingNumber(String.valueOf(weightOfFullCages.getText())));

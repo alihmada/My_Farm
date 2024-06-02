@@ -70,9 +70,9 @@ public class AddNewUser extends DialogFragment {
         Button confirmButton = dialog.findViewById(R.id.done);
         confirmButton.setOnClickListener(v -> {
             if (isValidInputs()) {
-                listener.onDataEntered(firstNameEditText.getText().toString(),
-                        lastNameEditText.getText().toString(),
-                        phoneEditText.getText().toString(),
+                listener.onDataEntered(firstNameEditText.getText().toString().trim(),
+                        lastNameEditText.getText().toString().trim(),
+                        phoneEditText.getText().toString().trim(),
                         selectedType);
                 dismiss();
             }
@@ -117,8 +117,8 @@ public class AddNewUser extends DialogFragment {
             isValid = false;
         }
 
-        isValid &= setInputError(firstNameEditText, !Matcher.isUserName(firstNameEditText.getText().toString()));
-        isValid &= setInputError(lastNameEditText, !Matcher.isUserName(lastNameEditText.getText().toString()));
+        isValid &= setInputError(firstNameEditText, Matcher.isUserName(firstNameEditText.getText().toString()));
+        isValid &= setInputError(lastNameEditText, Matcher.isUserName(lastNameEditText.getText().toString()));
         isValid &= setInputError(phoneEditText, !Matcher.isPhoneNumber(phoneEditText.getText().toString()));
 
         return isValid;

@@ -80,7 +80,8 @@
             android:layout_marginTop="@dimen/margin"
             android:layout_marginEnd="@dimen/margin_0.5"
             android:layout_marginBottom="@dimen/margin_0.5"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:tooltipText="@string/heating">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -108,7 +109,8 @@
             android:layout_marginTop="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin_0.5"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:tooltipText="@string/transaction">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -118,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
-                    android:src="@drawable/payment"
+                    android:src="@drawable/transaction"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +138,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/report"
+            android:id="@+id/expenses"
             style="@style/outlinedCardViewStyleWithoutMargin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -144,7 +146,8 @@
             android:layout_marginTop="@dimen/margin_0.5"
             android:layout_marginEnd="@dimen/margin_0.5"
             android:layout_marginBottom="@dimen/margin"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:tooltipText="@string/expenses">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -155,7 +158,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
                     android:layout_weight="2"
-                    android:src="@drawable/report"
+                    android:src="@drawable/expense"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +176,8 @@
             android:layout_marginTop="@dimen/margin_0.5"
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:tooltipText="@string/electricity">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
