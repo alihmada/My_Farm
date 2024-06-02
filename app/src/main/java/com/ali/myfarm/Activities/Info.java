@@ -50,6 +50,7 @@ public class Info extends AppCompatActivity {
     private void setValues() {
         int index = Integer.parseInt(nDay);
         day.setText(nDay);
+        if (index == 0) ++index;
         water.setText(Calculation.needWater(numOfChicken, index));
         feed.setText(Calculation.needFeed(numOfChicken, index));
         temp.setText(Common.getTemperature(index - 1));

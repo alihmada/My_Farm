@@ -30,6 +30,7 @@ import java.util.List;
 
 public class Buyers extends Fragment implements ViewOnClickListener {
 
+    Bundle bundle;
     private BuyersViewModel model;
     private String mainID, periodID;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -50,6 +51,8 @@ public class Buyers extends Fragment implements ViewOnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_buyer, container, false);
+
+        bundle = new Bundle();
 
         initializeViews(view);
         setupViewModel();
@@ -127,8 +130,9 @@ public class Buyers extends Fragment implements ViewOnClickListener {
     @Override
     public void onClickListener(String buyer) {
         Intent intent = new Intent(requireContext(), Bill.class);
-        intent.putExtra(Common.IS_TRADER, false);
-        intent.putExtra(Common.MOVED_DATA, buyer);
+        bundle.putBoolean(Common.IS_TRADER, false);
+        bundle.putString(Common.MOVED_DATA, buyer);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

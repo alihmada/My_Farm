@@ -47,4 +47,12 @@ public class Transaction {
     public void setPriceForBuyers(double priceForBuyers) {
         this.priceForBuyers = priceForBuyers;
     }
+
+    public double getTotalWeight() {
+        return getWeightForTraders() + getWeightForBuyers();
+    }
+
+    public double getTotalPrice() {
+        return getPriceForTraders() + getPriceForBuyers();
+    }
 }

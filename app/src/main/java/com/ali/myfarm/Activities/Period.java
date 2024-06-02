@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
-import com.ali.myfarm.MVVM.PeriodViewMadel;
+import com.ali.myfarm.MVVM.PeriodViewModel;
 import com.ali.myfarm.Models.Medicine;
 import com.ali.myfarm.R;
 import com.google.android.material.card.MaterialCardView;
@@ -21,7 +21,7 @@ public class Period extends AppCompatActivity {
 
     Bundle bundle;
     int numOfChickens;
-    PeriodViewMadel model;
+    PeriodViewModel model;
     String mainID, periodID, pastDay;
     TextView header, day, numberOfChickens, feedCount;
     MaterialCardView chicks, feed, medicine, more;
@@ -62,7 +62,7 @@ public class Period extends AppCompatActivity {
         ImageButton info = findViewById(R.id.info);
         info.setOnClickListener(view -> {
             Intent intent = new Intent(this, Info.class);
-            bundle.putString(Common.N_DAY, Objects.equals(pastDay, "0") ? "1" : pastDay);
+            bundle.putString(Common.N_DAY, pastDay);
             bundle.putInt(Common.CHICKEN, numOfChickens);
             intent.putExtras(bundle);
             startActivity(intent);
@@ -115,7 +115,7 @@ public class Period extends AppCompatActivity {
 
 
     private void setupViewModel() {
-        model = new ViewModelProvider(this).get(PeriodViewMadel.class);
+        model = new ViewModelProvider(this).get(PeriodViewModel.class);
         model.initialize(this, mainID, periodID);
     }
 

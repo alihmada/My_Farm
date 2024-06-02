@@ -30,7 +30,7 @@
     <string name="add">إضافة</string>
     <string name="remove">إزالة</string>
     <string name="over">ناهي</string>
-    <string name="initialize">بادي</string>
+    <string name="initialize">نامي</string>
     <string name="enter_num_of_bags">ادخل عدد الشكاير</string>
     <string name="num_of_bags">عدد الشكاير</string>
     <string name="enter_price_of_ton">ادخل سعر الطن</string>
@@ -61,7 +61,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="die">الوفيات</string>
     <string name="sold">المبيعات</string>
-    <string name="growing">نامي</string>
+    <string name="growing">بادي</string>
 
     <string name="operation">العملية</string>
     <string name="price">السعر</string>
@@ -119,4 +119,8 @@
     <string name="medicine">الأدوية</string>
     <string name="suppliers">الموردين</string>
     <string name="name">اسم المزرعة</string>
+    <string name="weight">الوزن : </string>
+    <string name="price_x">السعر : </string>
+    <string name="total_sum">المجموع الكلى</string>
+    <string name="transaction_not_found">لا توجد بيانات للعرض</string>
 </resources>

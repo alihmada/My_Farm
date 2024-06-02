@@ -39,10 +39,7 @@
         android:layout_height="60dp"
         android:layout_marginVertical="20dp"
         android:background="@drawable/button_ripple_effect"
-        android:drawableStart="@drawable/arrow"
         android:gravity="center"
-        android:paddingStart="@dimen/padding"
-        android:paddingEnd="20dp"
         android:text="@string/ok"
         android:textSize="@dimen/text_size"
         android:textStyle="bold" />

@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
-                android:text="نامي"
+                android:text="@string/growing"
                 android:textSize="@dimen/text_size"
                 app:layout_constraintBottom_toTopOf="@+id/growing_checkBox"
                 app:layout_constraintEnd_toEndOf="parent"

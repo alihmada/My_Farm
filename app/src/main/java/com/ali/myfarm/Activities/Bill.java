@@ -2,9 +2,9 @@ package com.ali.myfarm.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Fragments.BuyerBill;
@@ -14,9 +14,10 @@ import com.ali.myfarm.R;
 import java.util.Objects;
 
 public class Bill extends AppCompatActivity implements TraderBill.OnFragmentInteractionListener, BuyerBill.OnFragmentInteractionListener {
-    Bundle bundle;
-    boolean isTrader;
-    String mainID, periodID;
+
+    private String mainID;
+    private String periodID;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,22 +25,22 @@ public class Bill extends AppCompatActivity implements TraderBill.OnFragmentInte
         setContentView(R.layout.activity_bill);
 
         bundle = new Bundle();
+
         mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
-        isTrader = Objects.requireNonNull(getIntent().getExtras()).getBoolean(Common.IS_TRADER);
+        periodID = getIntent().getExtras().getString(Common.PERIOD_ID);
+        boolean isTrader = getIntent().getBooleanExtra(Common.IS_TRADER, false);
 
-        if (isTrader)
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TraderBill(mainID, periodID, getIntent().getStringExtra(Common.MOVED_DATA))).commit();
-        else
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new BuyerBill(mainID, periodID, getIntent().getStringExtra(Common.MOVED_DATA))).commit();
+        String movedData = getIntent().getExtras().getString(Common.MOVED_DATA);
+        Fragment fragment = isTrader ? new TraderBill(mainID, periodID, movedData) : new BuyerBill(mainID, periodID, movedData);
 
-        ImageButton back = findViewById(R.id.back);
-        back.setOnClickListener(view -> onBackPressed());
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+
+        findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
     }
 
     @Override
     public void onFinishActivity() {
-        Intent intent = new Intent(Bill.this, Transaction.class);
+        Intent intent = new Intent(this, Transaction.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         bundle.putString(Common.MAIN_ID, mainID);
         bundle.putString(Common.PERIOD_ID, periodID);

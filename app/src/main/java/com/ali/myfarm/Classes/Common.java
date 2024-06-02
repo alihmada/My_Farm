@@ -36,6 +36,10 @@ public class Common {
     public static final String SALES = "sales";
     private static final int[] durationOfDarkness = {24, 23, 23, 23, 22, 22, 22, 22, 21, 21, 21, 21, 21, 20, 20, 20, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20};
     private static final int[] temperature = {35, 33, 33, 32, 31, 30, 30, 30, 29, 29, 28, 28, 28, 27, 27, 27, 26, 26, 25, 25, 25, 24, 24, 24, 23, 23, 23, 22, 22, 22, 22, 22, 21, 21, 21, 21, 20, 20, 20, 21, 21, 20, 20, 20, 20};
+    public static String Weight_OF_TRADER = "weightForTraders";
+    public static String Weight_OF_BUYER = "weightForBuyers";
+    public static String Price_OF_TRADER = "priceForTraders";
+    public static String Price_OF_BUYER = "priceForBuyers";
     private static String ROOT;
 
     public static String getDurationOfDarkness(int index) {

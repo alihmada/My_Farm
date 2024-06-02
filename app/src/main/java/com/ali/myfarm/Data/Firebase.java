@@ -22,6 +22,7 @@ import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.Models.Person;
 import com.ali.myfarm.Models.Sale;
 import com.ali.myfarm.Models.Trader;
+import com.ali.myfarm.Models.Transaction;
 import com.ali.myfarm.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -155,6 +156,10 @@ public class Firebase {
         return getSpecificPeriod(context, year, periodName).child(Common.TRANSACTION);
     }
 
+    public static void setTransactionBranchThatPeriodHave(Context context, String year, String periodName, Transaction transaction) {
+        getSpecificPeriod(context, year, periodName).child(Common.TRANSACTION).setValue(transaction);
+    }
+
     public static DatabaseReference getTraderBranchFromTransactionBranchThatPeriodHave(Context context, String year, String periodName) {
         return getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.TRADERS);
     }
@@ -228,6 +233,16 @@ public class Firebase {
 
     public static void setSale(Context context, String year, String periodName, Sale sale) {
         getSpecificPeriod(context, year, periodName).child(Common.SALES).push().setValue(sale);
+    }
+
+    public static void updateWeightAndPriceForTrader(Context context, String year, String periodName, double oldWeight, double newWeight, double oldPrice, double newPrice) {
+        getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.Weight_OF_TRADER).setValue(oldWeight + newWeight);
+        getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.Price_OF_TRADER).setValue(oldPrice + newPrice);
+    }
+
+    public static void updateWeightAndPriceForBuyer(Context context, String year, String periodName, double oldWeight, double newWeight, double oldPrice, double newPrice) {
+        getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.Weight_OF_BUYER).setValue(oldWeight + newWeight);
+        getTransactionBranchThatPeriodHave(context, year, periodName).child(Common.Price_OF_BUYER).setValue(oldPrice + newPrice);
     }
 
     private static void operationHandler(Context context, String year, String periodName, Bag bag, Feed.Type type) {

@@ -2,6 +2,8 @@ package com.ali.myfarm.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +18,30 @@ import androidx.lifecycle.ViewModelProvider;
 import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Vibrate;
 import com.ali.myfarm.Data.Firebase;
-import com.ali.myfarm.MVVM.PeriodViewMadel;
+import com.ali.myfarm.Dialogs.Alert;
+import com.ali.myfarm.MVVM.PeriodViewModel;
 import com.ali.myfarm.MVVM.PersonViewModel;
+import com.ali.myfarm.MVVM.TransactionViewModel;
 import com.ali.myfarm.Models.Buyer;
 import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.Models.Sale;
+import com.ali.myfarm.Models.Transaction;
 import com.ali.myfarm.R;
-import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 
-import java.util.Optional;
-
 public class BuyerBill extends Fragment {
+
+    private Transaction transaction;
+    private double chickensPrice;
     private Buyer buyer;
     private Period periodData;
-    private PersonViewModel model;
-    private PeriodViewMadel periodViewMadel;
-    private String year, period, buyerData;
-    private OnFragmentInteractionListener mListener;
-
+    private TransactionViewModel transactionViewModel;
+    private PersonViewModel personViewModel;
+    private PeriodViewModel periodViewModel;
+    private String year;
+    private String period;
+    private String buyerData;
+    private OnFragmentInteractionListener listener;
 
     public BuyerBill() {
         // Required empty public constructor
@@ -49,94 +56,113 @@ public class BuyerBill extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof TraderBill.OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_buyer_bill, container, false);
 
-        getIntentData();
+        parseBuyerData();
         setupViews(view);
+
         if (year != null && period != null) {
-            setupViewModel();
-            setupPeriodViewModel();
-            getPeriodData();
+            setupViewModels();
+            observePeriodData();
+            observeTransactionData();
         }
-        initializeButtons(view);
+
+        setupButtons(view);
 
         return view;
     }
 
-    private void getIntentData() {
-        Gson gson = new Gson();
-        buyer = gson.fromJson(buyerData, Buyer.class);
+    private void parseBuyerData() {
+        buyer = new Gson().fromJson(buyerData, Buyer.class);
     }
 
     private void setupViews(View view) {
         TextView name = view.findViewById(R.id.name);
-        name.setText(buyer.getName());
         TextView weight = view.findViewById(R.id.weight);
-        weight.setText(Calculation.getNumber(buyer.getWeightOfChickens()));
         TextView numberOfChickens = view.findViewById(R.id.num_of_chickens);
-        numberOfChickens.setText(String.valueOf(buyer.getNumberOfChickens()));
         TextView priceOfKg = view.findViewById(R.id.price_of_kilo);
-        priceOfKg.setText(Calculation.getNumber(buyer.getPrice()));
-
         TextView average = view.findViewById(R.id.average);
-        average.setText(Calculation.getNumber(Calculation.getAverage(buyer.getWeightOfChickens(), buyer.getNumberOfChickens())));
         TextView totalPrice = view.findViewById(R.id.total);
-        totalPrice.setText(Calculation.formatNumberWithCommas(Calculation.getTotalPrice(buyer.getWeightOfChickens(), buyer.getPrice())));
+
+        name.setText(buyer.getName());
+        weight.setText(Calculation.getNumber(buyer.getWeightOfChickens()));
+        numberOfChickens.setText(String.valueOf(buyer.getNumberOfChickens()));
+        priceOfKg.setText(Calculation.getNumber(buyer.getPrice()));
+        average.setText(Calculation.getNumber(Calculation.getAverage(buyer.getWeightOfChickens(), buyer.getNumberOfChickens())));
+
+        chickensPrice = Calculation.getTotalPrice(buyer.getWeightOfChickens(), buyer.getPrice());
+
+        totalPrice.setText(Calculation.formatNumberWithCommas(chickensPrice));
     }
 
-    private void initializeButtons(View view) {
-        Button done = view.findViewById(R.id.done);
+    private void setupButtons(View view) {
+        Button doneButton = view.findViewById(R.id.done);
 
-        if (year == null && period == null) done.setVisibility(View.GONE);
+        if (year == null && period == null) {
+            doneButton.setVisibility(View.GONE);
+        } else {
+            doneButton.setOnClickListener(v -> handleDoneButtonClick());
+        }
+    }
 
-        done.setOnClickListener(view1 -> {
-            if ((periodData.getNumberOfAliveChickens() - periodData.getNumberOfSold()) - buyer.getNumberOfChickens() >= 0) {
-                Firebase.setBuyerInTransactionBranchThatPeriodHave(requireContext(), year, period, buyer);
-                Firebase.setSale(requireContext(), year, period, new Sale(buyer.getDate(), buyer.getNumberOfChickens(), periodData.getNumberOfAliveChickens() - buyer.getNumberOfChickens()));
-                model.getPerson().observe(requireActivity(), person -> {
-                    if (person != null) {
-                        Optional<DatabaseReference> firstValue = person.values().stream().findFirst();
-                        firstValue.ifPresent(value -> Firebase.setTransactionValueInBuyerThatPersonHave(value, year, period));
+    private void handleDoneButtonClick() {
+        if ((periodData.getNumberOfAliveChickens() - periodData.getNumberOfSold()) - buyer.getNumberOfChickens() >= 0) {
+            Firebase.setBuyerInTransactionBranchThatPeriodHave(requireContext(), year, period, buyer);
+            Firebase.setSale(requireContext(), year, period, new Sale(buyer.getDate(), buyer.getNumberOfChickens(), periodData.getNumberOfAliveChickens() - buyer.getNumberOfChickens()));
+            personViewModel.getPerson().observe(requireActivity(), person -> {
+                if (person != null) {
+                    person.values().stream().findFirst().ifPresent(value -> {
+                        Firebase.setTransactionValueInBuyerThatPersonHave(value, year, period);
                         Firebase.updateSoldValue(requireContext(), year, period, periodData.getNumberOfSold(), buyer.getNumberOfChickens());
+                        Firebase.updateWeightAndPriceForBuyer(requireContext(), year, period, transaction.getWeightForBuyers(), buyer.getWeightOfChickens(), transaction.getPriceForBuyers(), chickensPrice);
                         Vibrate.vibrate(requireContext());
                         Toast.makeText(requireContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
-                        if (mListener != null) {
-                            mListener.onFinishActivity();
+                        if (listener != null) {
+                            listener.onFinishActivity();
                         }
-                    }
-
-                });
-            }
-        });
+                    });
+                }
+            });
+        } else {
+            showAlert();
+        }
     }
 
-    private void setupViewModel() {
-        model = new ViewModelProvider(this).get(PersonViewModel.class);
-        model.initialize(requireContext(), buyer.getName());
+    private void showAlert() {
+        new Handler(Looper.getMainLooper()).post(() -> new Alert(R.drawable.wrong, getString(R.string.no_enough_chickens)).show(getParentFragmentManager(), ""));
     }
 
-    private void setupPeriodViewModel() {
-        periodViewMadel = new ViewModelProvider(this).get(PeriodViewMadel.class);
-        periodViewMadel.initialize(requireContext(), year, period);
+    private void setupViewModels() {
+        personViewModel = new ViewModelProvider(this).get(PersonViewModel.class);
+        transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        periodViewModel = new ViewModelProvider(this).get(PeriodViewModel.class);
+
+        personViewModel.initialize(requireContext(), buyer.getName());
+        transactionViewModel.initialize(requireContext(), year, period);
+        periodViewModel.initialize(requireContext(), year, period);
     }
 
-    private void getPeriodData() {
-        periodViewMadel.getPeriod().observe(requireActivity(), period -> periodData = period);
+    private void observePeriodData() {
+        periodViewModel.getPeriod().observe(requireActivity(), period -> periodData = period);
+    }
+
+    private void observeTransactionData() {
+        transactionViewModel.getTransaction().observe(requireActivity(), transaction -> this.transaction = transaction);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
     public interface OnFragmentInteractionListener {

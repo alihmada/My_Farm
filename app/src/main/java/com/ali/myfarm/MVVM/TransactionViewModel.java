@@ -6,20 +6,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.ali.myfarm.Models.Period;
+import com.ali.myfarm.Models.Trader;
+import com.ali.myfarm.Models.Transaction;
 
-public class PeriodViewMadel extends ViewModel {
-    private MutableLiveData<Period> mutableLiveData;
+import java.util.List;
+
+public class TransactionViewModel extends ViewModel {
+    private MutableLiveData<Transaction> mutableLiveData;
 
     public void initialize(Context context, String year, String periodName) {
         if (mutableLiveData != null) {
             return;
         }
         Repository repository = Repository.getInstance();
-        mutableLiveData = repository.getPeriod(context, year, periodName);
+        mutableLiveData = repository.getTransaction(context, year, periodName);
     }
 
-    public LiveData<Period> getPeriod() {
+    public LiveData<Transaction> getTransaction() {
         return mutableLiveData;
     }
 }

@@ -16,23 +16,31 @@ import com.ali.myfarm.Fragments.BuyerTransaction;
 import com.ali.myfarm.Fragments.TraderTransaction;
 import com.ali.myfarm.R;
 
-import java.util.Objects;
-
 public class NewTransactionOperation extends AppCompatActivity {
 
-    String mainID, periodID;
+    private String mainID;
+    private String periodID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_transaction_operation);
 
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
+        mainID = requireNonNullExtra(Common.MAIN_ID);
+        periodID = requireNonNullExtra(Common.PERIOD_ID);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new TraderTransaction(mainID, periodID)).commit();
+        if (mainID == null) {
+            throw new IllegalArgumentException("Required data missing in intent extras");
+        }
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new TraderTransaction(mainID, periodID))
+                    .commit();
+        }
+
         setupLayout();
-        initializeButtons();
+        initializeBackButton();
     }
 
     private void setupLayout() {
@@ -43,15 +51,27 @@ public class NewTransactionOperation extends AppCompatActivity {
         buyerTextView.setOnClickListener(view -> switchView(buyerTextView, traderTextView, new BuyerTransaction(mainID, periodID)));
     }
 
-    private void initializeButtons() {
-        ImageButton back = findViewById(R.id.back);
-        back.setOnClickListener(view -> onBackPressed());
+    private void initializeBackButton() {
+        ImageButton backButton = findViewById(R.id.back);
+        backButton.setOnClickListener(view -> onBackPressed());
     }
 
     private void switchView(TextView selectedView, TextView otherView, Fragment fragmentToShow) {
-        focus(selectedView);
-        removeBackground(otherView);
+        setFocus(selectedView);
+        clearBackground(otherView);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentToShow).commit();
+    }
+
+    private void setFocus(TextView textView) {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
+        Drawable background = ContextCompat.getDrawable(this, R.drawable.switch_track);
+        applyTextStyle(textView, typedValue.data, Typeface.BOLD, background);
+    }
+
+    private void clearBackground(TextView textView) {
+        textView.setBackground(null);
+        applyTextStyle(textView, ContextCompat.getColor(this, R.color.black), Typeface.NORMAL, null);
     }
 
     private void applyTextStyle(TextView textView, int textColor, int textStyle, Drawable background) {
@@ -60,15 +80,14 @@ public class NewTransactionOperation extends AppCompatActivity {
         textView.setBackground(background);
     }
 
-    private void removeBackground(TextView textView) {
-        textView.setBackground(null);
-        applyTextStyle(textView, ContextCompat.getColor(this, R.color.black), Typeface.NORMAL, null);
-    }
-
-    private void focus(TextView textView) {
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
-        Drawable background = ContextCompat.getDrawable(this, R.drawable.switch_track);
-        applyTextStyle(textView, typedValue.data, Typeface.BOLD, background);
+    private String requireNonNullExtra(String key) {
+        if (getIntent().getExtras() == null) {
+            throw new IllegalArgumentException("No extras provided in intent");
+        }
+        String value = getIntent().getStringExtra(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required extra: " + key);
+        }
+        return value;
     }
 }

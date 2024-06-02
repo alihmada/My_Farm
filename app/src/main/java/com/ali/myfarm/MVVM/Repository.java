@@ -17,6 +17,7 @@ import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.Models.Person;
 import com.ali.myfarm.Models.Sale;
 import com.ali.myfarm.Models.Trader;
+import com.ali.myfarm.Models.Transaction;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -448,6 +449,27 @@ public class Repository {
                 // Handle any errors
             }
         });
+
+        return mutableLiveData;
+    }
+
+    public MutableLiveData<Transaction> getTransaction(Context context, String year, String periodName) {
+        MutableLiveData<Transaction> mutableLiveData = new MutableLiveData<>();
+
+        Firebase.getTransactionBranchThatPeriodHave(context, year, periodName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mutableLiveData.setValue(dataSnapshot.getValue(Transaction.class));
+                } else mutableLiveData.setValue(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+
 
         return mutableLiveData;
     }

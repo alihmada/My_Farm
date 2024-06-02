@@ -21,7 +21,7 @@ import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Dialogs.ChickenStatus;
 import com.ali.myfarm.Fragments.Die;
 import com.ali.myfarm.Fragments.Sales;
-import com.ali.myfarm.MVVM.PeriodViewMadel;
+import com.ali.myfarm.MVVM.PeriodViewModel;
 import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.R;
 import com.google.android.material.tabs.TabLayout;
@@ -35,7 +35,7 @@ public class Chicken extends AppCompatActivity {
     private Handler handler;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private PeriodViewMadel model;
+    private PeriodViewModel model;
     private String mainID, periodID;
     private TextView all;
     private TextView alive;
@@ -138,7 +138,7 @@ public class Chicken extends AppCompatActivity {
     }
 
     private void setupViewModel() {
-        model = new ViewModelProvider(this).get(PeriodViewMadel.class);
+        model = new ViewModelProvider(this).get(PeriodViewModel.class);
         model.initialize(this, mainID, periodID);
     }
 

@@ -95,8 +95,8 @@ public class Feed extends AppCompatActivity {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(
                 getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(new End(mainID, periodID), getString(R.string.over));
-        adapter.addFragment(new Beginning(mainID, periodID), getString(R.string.growing));
-        adapter.addFragment(new Growing(mainID, periodID), getString(R.string.initialize));
+        adapter.addFragment(new Beginning(mainID, periodID), getString(R.string.initialize));
+        adapter.addFragment(new Growing(mainID, periodID), getString(R.string.growing));
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

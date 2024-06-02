@@ -29,6 +29,8 @@ import com.ali.myfarm.R;
 import java.util.List;
 
 public class Traders extends Fragment implements ViewOnClickListener {
+
+    private Bundle bundle;
     private TradersViewModel model;
     private String mainID, periodID;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,6 +51,8 @@ public class Traders extends Fragment implements ViewOnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trader, container, false);
+
+        bundle = new Bundle();
 
         initializeViews(view);
         setupViewModel();
@@ -127,8 +131,9 @@ public class Traders extends Fragment implements ViewOnClickListener {
     @Override
     public void onClickListener(String trader) {
         Intent intent = new Intent(requireContext(), Bill.class);
-        intent.putExtra(Common.IS_TRADER, true);
-        intent.putExtra(Common.MOVED_DATA, trader);
+        bundle.putBoolean(Common.IS_TRADER, true);
+        bundle.putString(Common.MOVED_DATA, trader);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }
