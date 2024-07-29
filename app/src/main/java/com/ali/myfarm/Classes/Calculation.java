@@ -24,7 +24,7 @@ public class Calculation {
         return (number * priceOfTon) / NUMBER_OF_BAGS_ON_TON;
     }
 
-    public static double getHeatingPrice(double number, double price) {
+    public static double getElectricityOrHeatingPrice(double number, double price) {
         return number * price;
     }
 
@@ -50,7 +50,7 @@ public class Calculation {
 
     public static String formatNumberWithCommas(double number) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        DecimalFormat formatter = new DecimalFormat("#,###.##", symbols);
+        DecimalFormat formatter = new DecimalFormat("#,###.###", symbols);
         return formatter.format(number);
     }
 

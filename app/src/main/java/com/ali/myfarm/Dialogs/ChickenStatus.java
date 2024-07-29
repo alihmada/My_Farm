@@ -58,7 +58,7 @@ public class ChickenStatus extends DialogFragment {
     private void setupConfirmButton(Dialog dialog) {
         Button confirm = dialog.findViewById(R.id.done);
         confirm.setOnClickListener(v -> {
-            String numberOfDead = this.numberOfDead.getText().toString();
+            String numberOfDead = this.numberOfDead.getText().toString().trim();
             if (Matcher.isNumber(numberOfDead)) {
                 listener.onDataEntered(Integer.parseInt(numberOfDead));
                 dismiss();
@@ -70,7 +70,7 @@ public class ChickenStatus extends DialogFragment {
     }
 
     private void handleInputErrors() {
-        validateAndSetBackground(numberOfDead, Matcher.isNumber(numberOfDead.getText().toString()));
+        validateAndSetBackground(numberOfDead, Matcher.isNumber(numberOfDead.getText().toString().trim()));
         Toast.makeText(requireContext(), requireContext().getString(R.string.check_inputs), Toast.LENGTH_SHORT).show();
     }
 

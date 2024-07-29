@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
 import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Interfaces.ViewOnClickListener;
 import com.ali.myfarm.Models.Buyer;
 import com.ali.myfarm.R;
@@ -36,7 +37,7 @@ public class BuyersTransactionAdapter extends RecyclerView.Adapter<BuyersTransac
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(buyers.get(position).getDate());
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), buyers.get(position).getDate()));
         holder.header.setText(holder.header.getContext().getString(R.string.buyer_header));
         holder.name.setText(buyers.get(position).getName());
         holder.count.setText(String.valueOf(buyers.get(position).getNumberOfChickens()));

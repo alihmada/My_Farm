@@ -10,8 +10,8 @@ public class Common {
     public static final String FARM_ID = "farm_id";
     public static final String SHARED_PREFERENCE_NAME = "e4aE9coc2cY=";
     public static final String IMAGE = "image";
-    public static final String MAIN_ID = "main id";
-    public static final String PERIOD_ID = "period id";
+    public static final String YEAR = "year";
+    public static final String MONTH = "month";
     public static final String PERIOD = "period";
     public static final String CHICKEN = "chicken";
     public static final String FEED = "feed";
@@ -25,6 +25,7 @@ public class Common {
     public static final String VALUE = "value";
     public static final String REGEX = "regex";
     public static final String DECIMAL_REGEX = "\\d*\\.?\\d+$";
+    public static final String NOT_EMPTY_REGEX = "^\\s*\\S.*$";
     public static final String TRANSACTION = "transaction";
     public static final String TRADERS = "traders";
     public static final String BUYERS = "buyers";
@@ -34,8 +35,11 @@ public class Common {
     public static final String IS_TRADER = "isTrader";
     public static final String SOLD = "numberOfSold";
     public static final String SALES = "sales";
+    public static final String NUMBER_OF_FEED_BAGS = "numberOfFeedBags";
+    public static final String EXPENSES = "expenses";
     private static final int[] durationOfDarkness = {24, 23, 23, 23, 22, 22, 22, 22, 21, 21, 21, 21, 21, 20, 20, 20, 20, 20, 20, 20, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20, 20, 20, 20, 20, 20, 20, 20, 20};
     private static final int[] temperature = {35, 33, 33, 32, 31, 30, 30, 30, 29, 29, 28, 28, 28, 27, 27, 27, 26, 26, 25, 25, 25, 24, 24, 24, 23, 23, 23, 22, 22, 22, 22, 22, 21, 21, 21, 21, 20, 20, 20, 21, 21, 20, 20, 20, 20};
+    public static boolean isFinished = false;
     public static String Weight_OF_TRADER = "weightForTraders";
     public static String Weight_OF_BUYER = "weightForBuyers";
     public static String Price_OF_TRADER = "priceForTraders";

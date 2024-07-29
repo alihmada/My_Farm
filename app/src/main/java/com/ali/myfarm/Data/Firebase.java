@@ -12,10 +12,12 @@ import androidx.fragment.app.FragmentManager;
 import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Ciphering;
 import com.ali.myfarm.Classes.Common;
+import com.ali.myfarm.Classes.UniqueIdGenerator;
 import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Models.Bag;
 import com.ali.myfarm.Models.Buyer;
 import com.ali.myfarm.Models.Electricity;
+import com.ali.myfarm.Models.Expenses;
 import com.ali.myfarm.Models.Feed;
 import com.ali.myfarm.Models.Heating;
 import com.ali.myfarm.Models.Period;
@@ -78,14 +80,14 @@ public class Firebase {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     if (Boolean.FALSE.equals(snapshot.getValue(boolean.class))) {
-                        getAllPeriods(context, year).child(period.getName()).setValue(period);
-                        setFeed(context, year, period.getName(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
+                        getAllPeriods(context, year).child(period.getNumber()).setValue(period);
+                        setFeed(context, year, period.getNumber(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
                     } else {
                         showAlert(fragmentManager, R.drawable.wrong, context.getString(R.string.running_period));
                     }
                 } else {
-                    getAllPeriods(context, year).child(period.getName()).setValue(period);
-                    setFeed(context, year, period.getName(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
+                    getAllPeriods(context, year).child(period.getNumber()).setValue(period);
+                    setFeed(context, year, period.getNumber(), new Feed(0, 0.0, 0, 0.0, 0, 0.0));
                     setRunningItemValue(context, true);
                 }
             }
@@ -128,7 +130,7 @@ public class Firebase {
 
     public static void setInitialize(Context context, String year, String periodName, Bag bag) {
         getInitialize(context, year, periodName).push().setValue(bag);
-        operationHandler(context, year, periodName, bag, Feed.Type.BEGGING);
+        operationHandler(context, year, periodName, bag, Feed.Type.BEGINNING);
     }
 
     public static void setEnd(Context context, String year, String periodName, Bag bag) {
@@ -232,7 +234,31 @@ public class Firebase {
     }
 
     public static void setSale(Context context, String year, String periodName, Sale sale) {
-        getSpecificPeriod(context, year, periodName).child(Common.SALES).push().setValue(sale);
+        getSales(context, year, periodName).push().setValue(sale);
+    }
+
+    public static DatabaseReference getExpenses(Context context, String year, String periodName) {
+        return getSpecificPeriod(context, year, periodName).child(Common.EXPENSES);
+    }
+
+    public static void setExpenses(Context context, String year, String periodName, Expenses expenses) {
+        getExpenses(context, year, periodName).orderByChild("id").equalTo(expenses.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!snapshot.exists())
+                            getExpenses(context, year, periodName).push().setValue(expenses);
+                        else {
+                            expenses.setId(UniqueIdGenerator.generateUniqueId());
+                            setExpenses(context, year, periodName, expenses);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     public static void updateWeightAndPriceForTrader(Context context, String year, String periodName, double oldWeight, double newWeight, double oldPrice, double newPrice) {
@@ -261,7 +287,7 @@ public class Firebase {
                         case GROWING:
                             updateFeedAttributes(context, year, periodName, "growing", isAddOperation, bagNumber, bagPrice, feed.getGrowing(), feed.getPriceOfGrowing());
                             break;
-                        case BEGGING:
+                        case BEGINNING:
                             updateFeedAttributes(context, year, periodName, "beginning", isAddOperation, bagNumber, bagPrice, feed.getBeginning(), feed.getPriceOfBeginning());
                             break;
                         case END:
@@ -269,7 +295,11 @@ public class Firebase {
                             break;
                     }
 
-                    getSpecificPeriod(context, year, periodName).child("numberOfFeedBags").setValue(feed.getBags());
+                    if (isAddOperation) {
+                        getSpecificPeriod(context, year, periodName).child(Common.NUMBER_OF_FEED_BAGS).setValue(feed.getBags() + bag.getNumber());
+                    } else {
+                        getSpecificPeriod(context, year, periodName).child(Common.NUMBER_OF_FEED_BAGS).setValue(feed.getBags() - bag.getNumber());
+                    }
                 } catch (Exception e) {
                     Log.e("operationHandler", "Error handling feed operation", e);
                 }
@@ -336,4 +366,51 @@ public class Firebase {
     private static void showAlert(FragmentManager fragmentManager, int iconResId, String message) {
         handler.post(() -> new Alert(iconResId, message).show(fragmentManager, ""));
     }
+
+    public static void deleteExpenses(Context context, String year, String month, Expenses expenses) {
+        Firebase.getExpenses(context, year, month).orderByChild("date").equalTo(expenses.getDate())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Expenses expense = snapshot.getValue(Expenses.class);
+                                if (expense != null && expenses.getReason().equals(expense.getReason())) {
+                                    snapshot.getRef().removeValue();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle any errors
+                    }
+                });
+
+    }
+
+    public static void editExpenses(Context context, String year, String month, Expenses expenses) {
+        Firebase.getExpenses(context, year, month).orderByChild("id").equalTo(expenses.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Expenses expense = snapshot.getValue(Expenses.class);
+                                if (expense != null) {
+                                    snapshot.getRef().setValue(expenses);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle any errors
+                    }
+                });
+
+    }
+
 } //End Firebase

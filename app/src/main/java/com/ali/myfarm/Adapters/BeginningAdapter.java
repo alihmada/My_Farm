@@ -7,14 +7,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
 import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Models.Bag;
 import com.ali.myfarm.R;
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -35,12 +36,12 @@ public class BeginningAdapter extends RecyclerView.Adapter<BeginningAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(bags.get(position).getDateOfModification());
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), bags.get(position).getDateOfModification()));
         holder.numberOfBags.setText(String.valueOf(bags.get(position).getNumber()));
         if (bags.get(position).getOperation() == Bag.Operation.ADD) {
             holder.operationType.setText(holder.itemView.getResources().getString(R.string.add));
             holder.operation.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.add));
-            holder.price.setText(String.valueOf(Calculation.getBagsPrice(bags.get(position).getNumber(), bags.get(position).getPriceOfTon())));
+            holder.price.setText(Calculation.formatNumberWithCommas(Calculation.getBagsPrice(bags.get(position).getNumber(), bags.get(position).getPriceOfTon())));
         } else {
             holder.operationType.setText(holder.itemView.getResources().getString(R.string.remove));
             holder.operation.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.remove));
@@ -57,7 +58,7 @@ public class BeginningAdapter extends RecyclerView.Adapter<BeginningAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        MaterialCardView priceCard;
+        ConstraintLayout priceCard;
         TextView number, dateTime, numberOfBags, operationType, price;
         ImageView feedBag, operation;
 

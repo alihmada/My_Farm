@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PeriodProfile">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/period_number"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/text_view_circle"
+            android:backgroundTint="@color/account_filed"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/edit_customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="@dimen/margin"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/period_number">
+
+            <TextView
+                android:id="@+id/period_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/period_info"
+                android:textSize="@dimen/text_size" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/account_fields"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_customer_name">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/time"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="@dimen/margin"
+                    android:text="@string/beginning_date"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/beginning_date"
+                    style="@style/single_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/end_date_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/account_fields"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_customer_name">
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/time"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="@dimen/margin"
+                    android:text="@string/end_date"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/end_date"
+                    style="@style/single_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/account_fields"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_customer_name">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/tag"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="@dimen/margin"
+                    android:text="@string/number_of_period_days"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/number_of_period_days"
+                    style="@style/single_line"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/account_fields"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_customer_name">
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/tag"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="@dimen/margin"
+                    android:text="@string/chicken_number"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView6"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/chicken_number"
+                    style="@style/single_line"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/edit_chicken_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/account_fields"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/period_number">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/payments"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="@dimen/margin"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:text="@string/price_of_chicken"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/price_of_chicken"
+                    style="@style/single_line"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="19dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:textSize="@dimen/secondary_text_size"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <ImageView
+                    android:id="@+id/account_user_first_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/pen"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/end_period"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/components_height"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="@dimen/margin"
+            android:background="@drawable/button_ripple_effect"
+            android:backgroundTint="@color/red"
+            android:text="@string/finish"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/edit_customer_name"
+            app:layout_constraintStart_toStartOf="@+id/edit_customer_name"
+            app:layout_constraintTop_toBottomOf="@+id/edit_customer_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:background="@drawable/button_ripple_effect"
+        android:backgroundTint="@color/account_filed"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/report"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@drawable/button_ripple_effect"
+        android:backgroundTint="@color/account_filed"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/_report"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

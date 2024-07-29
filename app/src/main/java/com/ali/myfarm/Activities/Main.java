@@ -4,155 +4,134 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ali.myfarm.Adapters.MainAdapter;
-import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
-import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Data.Firebase;
 import com.ali.myfarm.Dialogs.NewPeriod;
-import com.ali.myfarm.Intenet.Internet;
-import com.ali.myfarm.Interfaces.ViewOnClickListener;
+import com.ali.myfarm.Fragments.Months;
+import com.ali.myfarm.Fragments.Years;
+import com.ali.myfarm.Interfaces.OnResume;
 import com.ali.myfarm.MVVM.NameViewModel;
-import com.ali.myfarm.MVVM.YearsViewModel;
 import com.ali.myfarm.Models.Period;
 import com.ali.myfarm.R;
 
-import java.util.List;
+public class Main extends AppCompatActivity implements OnResume {
 
-public class Main extends AppCompatActivity implements ViewOnClickListener {
-
-    private SwipeRefreshLayout swipeRefreshLayout;
     private NameViewModel nameViewModel;
-    private RecyclerView recyclerView;
-    private MainAdapter mainAdapter;
-    private ProgressBar progressBar;
-    private TextView textView, name;
-    private ConstraintLayout alert;
-    private YearsViewModel model;
-    private ImageView imageView;
-    private EditText search;
-    private Bundle bundle;
+    private ImageButton menu;
+    private String farmName;
+    private boolean isYears;
+    private TextView name;
+    private Months months;
+    private Years years;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bundle = new Bundle();
-        setupNameViewModel();
-        setName();
-        initializeViews();
+        setStatusBarColor();
+        setupFragments();
+        setupHeader();
         initializeButtons();
-        setupViewModel();
-        setupView();
         setupSearch();
-        setupSwipeRefreshLayout();
     }
 
-    private void initializeViews() {
+    private int getPrimaryColor() {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true);
+        return typedValue.data;
+    }
+
+    private void setStatusBarColor() {
+        getWindow().setStatusBarColor(getPrimaryColor());
+    }
+
+    private void setupHeader() {
         name = findViewById(R.id.name);
-        alert = findViewById(R.id.alert);
-        imageView = findViewById(R.id.alert_image);
-        textView = findViewById(R.id.alert_text);
-        progressBar = findViewById(R.id.progressBar);
-        recyclerView = findViewById(R.id.main_recycler);
-        recyclerView.addItemDecoration(new FirstItemMarginDecoration(getResources().getDimensionPixelSize(R.dimen.margin)));
+        setupNameViewModel();
+        setName();
+    }
+
+    private void setupFragments() {
+        years = new Years(this, year -> {
+            months = new Months(year);
+            replaceFragment(months, "FRAGMENT_MONTHS_TAG");
+            name.setText(year);
+            isYears = false;
+        });
+
+        replaceFragment(years, "FRAGMENT_YEARS_TAG");
+
+    }
+
+    private void replaceFragment(Fragment fragment, String tag) {
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down,   // enter animation
+                R.anim.slide_out_down,  // exit animation
+                R.anim.slide_in_up,     // popEnter animation
+                R.anim.slide_out_up     // popExit animation
+        ).replace(R.id.container, fragment, tag).addToBackStack(null).commit();
+    }
+
+    private void checkCurrentFragment() {
+        Fragment years = getSupportFragmentManager().findFragmentByTag("FRAGMENT_YEARS_TAG");
+
+        if (years != null && years.isVisible()) {
+            name.setText(farmName);
+            isYears = true;
+        }
     }
 
     private void initializeButtons() {
         ImageButton addPeriod = findViewById(R.id.add_period);
         addPeriod.setOnClickListener(view -> new Handler(Looper.getMainLooper()).post(() -> {
-            NewPeriod period = new NewPeriod((count, price) -> Firebase.setPeriod(this, DateAndTime.getYear(), new Period(DateAndTime.getArabicNameOfMonth(), DateAndTime.getCurrentDateTime(), "", Integer.parseInt(count), 0, 0, 0, Double.parseDouble(price)), getSupportFragmentManager()));
+            NewPeriod period = new NewPeriod((count, price) -> Firebase.setPeriod(this, DateAndTime.getYear(), new Period(DateAndTime.getArabicNameOfMonth(), String.valueOf(DateAndTime.getCurrentMonth() + 1), DateAndTime.getCurrentDateTime(), "", Integer.parseInt(count), 0, 0, 0, Double.parseDouble(price)), getSupportFragmentManager()));
             period.show(getSupportFragmentManager(), "");
         }));
 
-        ImageButton menu = findViewById(R.id.menu);
+        menu = findViewById(R.id.menu);
         menu.setOnClickListener(view -> startActivity(new Intent(this, Menu.class)));
     }
 
-    private void setupSwipeRefreshLayout() {
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            setupView();
-            swipeRefreshLayout.setRefreshing(false);
-        });
-    }
-
-    private void setupView() {
-        if (Internet.isConnectedWithoutMessage(this)) {
-            alert.setVisibility(View.GONE);
-            if (Internet.isNetworkLimited(this)) {
-                setupWifi(getString(R.string.internet_limited));
-            } else {
-                setRecyclerView();
-            }
-        } else {
-            setupWifi(getString(R.string.no_internet));
-        }
-    }
-
-    private void setupWifi(String message) {
-        alert.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        textView.setText(message);
-        recyclerView.setAdapter(null);
-        imageView.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.wifi_off));
-    }
-
     private void setupSearch() {
-        search = findViewById(R.id.search_view);
-        search.addTextChangedListener(new TextWatcher() {
+        SearchView search = findViewById(R.id.search_view);
+
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (mainAdapter != null) {
-                    mainAdapter.getFilter().filter(s);
+            public boolean onQueryTextChange(String newText) {
+                if (isYears) {
+                    if (years != null)
+                        years.search(newText);
+                } else {
+                    if (months != null)
+                        months.search(newText);
                 }
+                return false;
             }
         });
-    }
 
-    private void setRecyclerView() {
-        model.getYears().observe(this, years -> {
-            if (years != null) {
-                if (!years.isEmpty()) {
-                    search.setEnabled(true);
-                    setupRecyclerViewData(years);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+        search.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                menu.setVisibility(View.INVISIBLE);
             } else {
-                search.setEnabled(false);
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                menu.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void setName() {
@@ -162,13 +141,9 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
             } else {
                 this.name.setText(getString(R.string.app_name));
             }
+            farmName = this.name.getText().toString();
         });
 
-    }
-
-    private void setupViewModel() {
-        model = new ViewModelProvider(this).get(YearsViewModel.class);
-        model.initialize(this);
     }
 
     private void setupNameViewModel() {
@@ -176,17 +151,19 @@ public class Main extends AppCompatActivity implements ViewOnClickListener {
         nameViewModel.initialize(this);
     }
 
-    private void setupRecyclerViewData(List<String> yearList) {
-        mainAdapter = new MainAdapter(yearList, Main.this);
-        recyclerView.setAdapter(mainAdapter);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStack();
+        } else if (fragmentManager.getBackStackEntryCount() == 0) {
+            finish();
+        }
     }
 
     @Override
-    public void onClickListener(String id) {
-        bundle.putString(Common.MAIN_ID, id);
-
-        Intent intent = new Intent(this, Periods.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+    public void onResumeFragment() {
+        checkCurrentFragment();
     }
 }

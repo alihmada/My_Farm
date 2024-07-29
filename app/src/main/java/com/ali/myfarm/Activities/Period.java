@@ -2,29 +2,33 @@ package com.ali.myfarm.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
+import com.ali.myfarm.Fragments.First;
+import com.ali.myfarm.Fragments.Second;
+import com.ali.myfarm.Interfaces.OnMoreClickedListener;
 import com.ali.myfarm.MVVM.PeriodViewModel;
-import com.ali.myfarm.Models.Medicine;
 import com.ali.myfarm.R;
-import com.google.android.material.card.MaterialCardView;
+import com.google.gson.Gson;
 
 import java.util.Objects;
 
-public class Period extends AppCompatActivity {
+public class Period extends AppCompatActivity implements OnMoreClickedListener {
 
-    Bundle bundle;
-    int numOfChickens;
-    PeriodViewModel model;
-    String mainID, periodID, pastDay;
-    TextView header, day, numberOfChickens, feedCount;
-    MaterialCardView chicks, feed, medicine, more;
+    private Bundle bundle;
+    private PeriodViewModel model;
+    private com.ali.myfarm.Models.Period period;
+    private String year, month, pastDay;
+    private TextView header, day;
 
 
     @Override
@@ -32,27 +36,43 @@ public class Period extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_period);
 
-        initializeViews();
-        initializeButtons();
         bundle = new Bundle();
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
-        header.setText(String.format("%s - %s", periodID, mainID));
+        getExtras();
+        setupFragments();
+        initializeViews();
+        setHead();
+        setupOpenProfile();
+        initializeButtons();
         setupViewModel();
-        setupChickens();
-        setupFeed();
-        //setupMedicine();
-        setupMore();
-        viewHandler();
+        setupHeader();
+    }
+
+    private void getExtras() {
+        year = Objects.requireNonNull(getIntent().getExtras()).getString(Common.YEAR);
+        month = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MONTH);
+    }
+
+    private void setHead() {
+        header.setText(String.format("%s - %s", DateAndTime.getArabicNameOfMonth(month), year));
+    }
+
+    private void setupFragments() {
+        First first = new First(year, month, this);
+
+        replaceFragment(first);
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down,   // enter animation
+                R.anim.slide_out_down,  // exit animation
+                R.anim.slide_in_up,     // popEnter animation
+                R.anim.slide_out_up     // popExit animation
+        ).replace(R.id.container, fragment).addToBackStack(null).commit();
     }
 
     private void initializeViews() {
         header = findViewById(R.id.period_head);
         day = findViewById(R.id.period_day);
-        chicks = findViewById(R.id.chicken);
-        feed = findViewById(R.id.feed);
-        medicine = findViewById(R.id.medicine);
-        more = findViewById(R.id.more);
     }
 
     private void initializeButtons() {
@@ -63,74 +83,67 @@ public class Period extends AppCompatActivity {
         info.setOnClickListener(view -> {
             Intent intent = new Intent(this, Info.class);
             bundle.putString(Common.N_DAY, pastDay);
-            bundle.putInt(Common.CHICKEN, numOfChickens);
+            bundle.putInt(Common.CHICKEN, period.getNumberOfAliveChickens() - period.getNumberOfSold());
             intent.putExtras(bundle);
             startActivity(intent);
         });
     }
 
-    private void setupChickens() {
-        chicks.setOnClickListener(view -> {
-            Intent intent = new Intent(this, Chicken.class);
-            bundle.putString(Common.MAIN_ID, mainID);
-            bundle.putString(Common.PERIOD_ID, periodID);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        });
+    private void setupOpenProfile() {
+        TextView head = findViewById(R.id.period_head);
+        TextView day = findViewById(R.id.period_day);
 
-        numberOfChickens = findViewById(R.id.chicken_number);
-    }
-
-    private void setupFeed() {
-        feed.setOnClickListener(view -> {
-            Intent intent = new Intent(this, Feed.class);
-            bundle.putString(Common.MAIN_ID, mainID);
-            bundle.putString(Common.PERIOD_ID, periodID);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        });
-
-        feedCount = findViewById(R.id.feed_count);
-    }
-
-    private void setupMedicine() {
-        medicine.setOnClickListener(view -> {
-            Intent intent = new Intent(this, Medicine.class);
-            startActivity(intent);
-        });
-    }
-
-    private void setupMore() {
-        more.setOnClickListener(view -> {
+        View.OnClickListener listener = view -> {
+            Intent intent = new Intent(this, PeriodProfile.class);
+            bundle.putString(Common.PERIOD, new Gson().toJson(period));
             bundle.putString(Common.N_DAY, pastDay);
-            bundle.putString(Common.MAIN_ID, mainID);
-            bundle.putInt(Common.CHICKEN, numOfChickens);
-            bundle.putString(Common.PERIOD_ID, periodID);
-
-            Intent intent = new Intent(this, More.class);
+            bundle.putString(Common.YEAR, year);
             intent.putExtras(bundle);
             startActivity(intent);
-        });
-    }
+        };
 
+        head.setOnClickListener(listener);
+        day.setOnClickListener(listener);
+    }
 
     private void setupViewModel() {
         model = new ViewModelProvider(this).get(PeriodViewModel.class);
-        model.initialize(this, mainID, periodID);
+        model.initialize(this, year, month);
     }
 
-    private void viewHandler() {
+    private void setupHeader() {
         model.getPeriod().observe(this, period -> {
-            numOfChickens = period.getNumberOfAliveChickens() - period.getNumberOfSold();
-            numberOfChickens.setText(String.valueOf(numOfChickens));
-            feedCount.setText(String.valueOf(period.getNumberOfFeedBags()));
-            if (!Objects.equals(period.getEndDate(), "")) {
-                pastDay = DateAndTime.getPastDays(period.getEndDate(), period.getBeginningDate());
-                day.setText(pastDay);
+            this.period = period;
+
+            String endDate = period.getEndDate();
+            String beginningDate = period.getBeginningDate();
+
+            if (endDate != null && !endDate.isEmpty()) {
+                pastDay = DateAndTime.getPastDays(endDate, beginningDate);
+                Common.isFinished = true;
             } else {
-                pastDay = DateAndTime.getPastDays(DateAndTime.getCurrentDateTime(), period.getBeginningDate());
-                day.setText(pastDay);
+                pastDay = DateAndTime.getPastDays(DateAndTime.getCurrentDateTime(), beginningDate);
+                Common.isFinished = false;
             }
+
+            day.setText(pastDay);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStack();
+        } else if (fragmentManager.getBackStackEntryCount() == 0) {
+            finish();
+        }
+    }
+
+    @Override
+    public void onMoreClicked() {
+        Second second = new Second(year, month);
+        replaceFragment(second);
     }
 }

@@ -110,7 +110,7 @@ public class ValueDialog extends DialogFragment {
         return edited.matches(regex);
     }
 
-    public static enum inputType {
+    public enum inputType {
         PHONE, DECIMAL, TEXT, NUMBER
     }
 
@@ -118,4 +118,7 @@ public class ValueDialog extends DialogFragment {
         void onDataEntered(String text);
     }
 
+    public interface OnValueSetListener {
+        void onValueSet(String text);
+    }
 }

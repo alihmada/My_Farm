@@ -21,6 +21,7 @@ import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Data.Firebase;
+import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Dialogs.HeatingDialog;
 import com.ali.myfarm.Intenet.Internet;
 import com.ali.myfarm.MVVM.HeatingViewModel;
@@ -31,8 +32,9 @@ import java.util.Objects;
 
 public class Heating extends AppCompatActivity {
 
-    String mainID, periodID;
-    HeatingViewModel model;
+    private Handler handler;
+    private String mainID, periodID;
+    private HeatingViewModel model;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -47,14 +49,15 @@ public class Heating extends AppCompatActivity {
 
         initializeViews();
         initializeButtons();
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
+        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.YEAR);
+        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MONTH);
         setupSwipeRefreshLayout();
         setupViewModel();
         setupView();
     }
 
     private void initializeViews() {
+        handler = new Handler(Looper.getMainLooper());
         alert = findViewById(R.id.alert);
         imageView = findViewById(R.id.alert_image);
         textView = findViewById(R.id.alert_text);
@@ -70,10 +73,14 @@ public class Heating extends AppCompatActivity {
     private void initializeButtons() {
         ImageButton add = findViewById(R.id.add);
         add.setOnClickListener(view -> {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                HeatingDialog heatingDialog = new HeatingDialog((type, number, date, price) -> Firebase.setHeating(this, mainID, periodID, new com.ali.myfarm.Models.Heating(type, number, date, price)));
-                heatingDialog.show(getSupportFragmentManager(), "");
-            });
+            if (!Common.isFinished) {
+                handler.post(() -> {
+                    HeatingDialog heatingDialog = new HeatingDialog((type, number, date, price) -> Firebase.setHeating(this, mainID, periodID, new com.ali.myfarm.Models.Heating(type, number, date, price)));
+                    heatingDialog.show(getSupportFragmentManager(), "");
+                });
+            } else {
+                showAlert(getString(R.string.finished));
+            }
         });
 
         ImageButton back = findViewById(R.id.back);
@@ -112,19 +119,23 @@ public class Heating extends AppCompatActivity {
 
     private void setRecyclerView() {
         model.getHeating().observe(this, heatingList -> {
-            if (heatingList != null) {
-                if (!heatingList.isEmpty()) {
-                    setupRecyclerViewData(heatingList);
-                    setupCards(heatingList);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (heatingList == null || heatingList.isEmpty()) {
+                handleEmptyHeating();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(heatingList);
+                handler.post(() -> setupCards(heatingList));
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptyHeating() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
+        setTextViewText(0, 0, 0, 0); // Reset values if needed
     }
 
     private void setupCards(List<com.ali.myfarm.Models.Heating> heatingList) {
@@ -133,17 +144,20 @@ public class Heating extends AppCompatActivity {
         for (com.ali.myfarm.Models.Heating heating : heatingList) {
             if (heating.getType() == com.ali.myfarm.Models.Heating.Type.GAS) {
                 cylindersCount += heating.getNumber();
-                cylindersPrice += Calculation.getHeatingPrice(heating.getNumber(), heating.getPrice());
+                cylindersPrice += Calculation.getElectricityOrHeatingPrice(heating.getNumber(), heating.getPrice());
             } else {
                 litersCount += heating.getNumber();
-                litersPrice += Calculation.getHeatingPrice(heating.getNumber(), heating.getPrice());
+                litersPrice += Calculation.getElectricityOrHeatingPrice(heating.getNumber(), heating.getPrice());
             }
         }
+        setTextViewText(cylindersCount, cylindersPrice, litersCount, litersPrice);
+    }
 
-        numberOfCylinders.setText(Calculation.getNumber(cylindersCount));
-        priceOfCylinders.setText(Calculation.getNumber(cylindersPrice));
-        numberOfLiters.setText(Calculation.getNumber(litersCount));
-        priceOfLiters.setText(Calculation.getNumber(litersPrice));
+    private void setTextViewText(double cylindersCount, double cylindersPrice, double litersCount, double litersPrice) {
+        numberOfCylinders.setText(Calculation.formatNumberWithCommas(cylindersCount));
+        priceOfCylinders.setText(Calculation.formatNumberWithCommas(cylindersPrice));
+        numberOfLiters.setText(Calculation.formatNumberWithCommas(litersCount));
+        priceOfLiters.setText(Calculation.formatNumberWithCommas(litersPrice));
     }
 
     private void setupRecyclerViewData(List<com.ali.myfarm.Models.Heating> heatingList) {
@@ -154,5 +168,9 @@ public class Heating extends AppCompatActivity {
     private void setupViewModel() {
         model = new ViewModelProvider(this).get(HeatingViewModel.class);
         model.initialize(this, mainID, periodID);
+    }
+
+    private void showAlert(String message) {
+        handler.post(() -> new Alert(R.drawable.error, message).show(getSupportFragmentManager(), ""));
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,9 +8,12 @@
     tools:context=".Activities.Period">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout8"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/period_header">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/period_head"
@@ -43,8 +46,9 @@
             android:id="@+id/back"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
+            android:layout_margin="@dimen/margin"
             android:background="@drawable/button_ripple_effect"
+            android:backgroundTint="@color/account_filed"
             android:contentDescription="@string/app_name"
             android:src="@drawable/back"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,6 +61,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/button_ripple_effect"
+            android:backgroundTint="@color/account_filed"
             android:contentDescription="@string/app_name"
             android:src="@drawable/info"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -65,152 +70,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/feed"
-            style="@style/outlinedCardViewStyleWithoutMargin"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin_0.5"
-            android:layout_marginBottom="@dimen/margin_0.5"
-            android:layout_weight="1"
-            android:tooltipText="@string/feed">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/margin"
-                    android:layout_weight="2"
-                    android:src="@drawable/feed" />
-
-                <TextView
-                    android:id="@+id/feed_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textSize="30sp" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/chicken"
-            style="@style/outlinedCardViewStyleWithoutMargin"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/margin_0.5"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin_0.5"
-            android:layout_weight="1"
-            android:tooltipText="@string/chickens">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/margin"
-                    android:layout_weight="2"
-                    android:src="@drawable/chick" />
-
-                <TextView
-                    android:id="@+id/chicken_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textSize="30sp" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/more"
-            style="@style/outlinedCardViewStyleWithoutMargin"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin_0.5"
-            android:layout_marginEnd="@dimen/margin_0.5"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_weight="1"
-            android:tooltipText="@string/more">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/margin"
-                    android:layout_weight="2"
-                    android:src="@drawable/baseline_more_horiz_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/medicine"
-            style="@style/outlinedCardViewStyleWithoutMargin"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/margin_0.5"
-            android:layout_marginTop="@dimen/margin_0.5"
-            android:layout_marginEnd="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
-            android:layout_weight="1"
-            android:tooltipText="@string/medicine">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/margin"
-                    android:layout_weight="2"
-                    android:src="@drawable/medicine"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

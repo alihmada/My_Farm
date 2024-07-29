@@ -34,6 +34,11 @@ public class AddNewFarm extends DialogFragment {
 
     private AddNewFarmListener listener;
     private EditText root, name;
+    private final ActivityResultLauncher<ScanOptions> scanOptionsActivityResultLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null) {
+            root.setText(result.getContents());
+        }
+    });
 
     public AddNewFarm() {
     }
@@ -78,7 +83,7 @@ public class AddNewFarm extends DialogFragment {
             if (isValidInputs()) {
                 Loading.showProgressDialog();
                 try {
-                    validateFarmID(Ciphering.decrypt(root.getText().toString()), name.getText().toString());
+                    validateFarmID(Ciphering.decrypt(root.getText().toString().trim()), name.getText().toString().trim());
                 } catch (Exception ignored) {
                 }
             }
@@ -145,12 +150,6 @@ public class AddNewFarm extends DialogFragment {
             return true;
         }
     }
-
-    private final ActivityResultLauncher<ScanOptions> scanOptionsActivityResultLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if (result.getContents() != null) {
-            root.setText(result.getContents());
-        }
-    });
 
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();

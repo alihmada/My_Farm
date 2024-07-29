@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.Vibrate;
 import com.ali.myfarm.Data.Firebase;
 import com.ali.myfarm.Dialogs.Alert;
@@ -33,7 +34,7 @@ public class TraderBill extends Fragment {
 
     private Transaction transaction;
     private TransactionViewModel transactionViewModel;
-    private double chickensWeight, chickensPrice;
+    private double chickensPrice;
     private Trader trader;
     private Period periodData;
     private PersonViewModel personViewModel;
@@ -64,6 +65,12 @@ public class TraderBill extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bill, container, false);
+
+        if (year == null && period == null && savedInstanceState != null) {
+            year = savedInstanceState.getString(Common.YEAR);
+            period = savedInstanceState.getString(Common.PERIOD);
+            traderJson = savedInstanceState.getString(Common.MOVED_DATA);
+        }
 
         parseTraderData();
         setupViews(view);
@@ -96,17 +103,15 @@ public class TraderBill extends Fragment {
 
         name.setText(trader.getName());
         numberOfCages.setText(String.valueOf(trader.getTotalNumberOfCages()));
-        weightOfEmptyCages.setText(Calculation.getNumber(trader.getTotalWeightOfEmptyCages()));
-        weightOfFullCages.setText(Calculation.getNumber(trader.getTotalWeightOfCages()));
+        weightOfEmptyCages.setText(Calculation.formatNumberWithCommas(trader.getTotalWeightOfCages() - trader.getWeightOfChickens()));
+        weightOfFullCages.setText(Calculation.formatNumberWithCommas(trader.getTotalWeightOfCages()));
         numberOfChickens.setText(String.valueOf(trader.getNumberOfChickens()));
-        priceOfKg.setText(Calculation.getNumber(trader.getPrice()));
+        priceOfKg.setText(Calculation.formatNumberWithCommas(trader.getPrice()));
 
-        chickensWeight = Calculation.getChickensWeight(trader.getTotalWeightOfCages(), trader.getTotalWeightOfEmptyCages());
+        average.setText(Calculation.formatNumberWithCommas(Calculation.getAverage(trader.getWeightOfChickens(), trader.getNumberOfChickens())));
+        weight.setText(Calculation.formatNumberWithCommas(trader.getWeightOfChickens()));
 
-        average.setText(Calculation.getNumber(Calculation.getAverage(chickensWeight, trader.getNumberOfChickens())));
-        weight.setText(Calculation.getNumber(chickensWeight));
-
-        chickensPrice = Calculation.getTotalPrice(chickensWeight, trader.getPrice());
+        chickensPrice = Calculation.getTotalPrice(trader.getWeightOfChickens(), trader.getPrice());
 
         totalPrice.setText(Calculation.formatNumberWithCommas(chickensPrice));
     }
@@ -130,7 +135,7 @@ public class TraderBill extends Fragment {
                     person.values().stream().findFirst().ifPresent(value -> {
                         Firebase.setTransactionValueInTraderThatPersonHave(value, year, period);
                         Firebase.updateSoldValue(requireContext(), year, period, periodData.getNumberOfSold(), trader.getNumberOfChickens());
-                        Firebase.updateWeightAndPriceForTrader(requireContext(), year, period, transaction.getWeightForTraders(), chickensWeight, transaction.getPriceForTraders(), chickensPrice);
+                        Firebase.updateWeightAndPriceForTrader(requireContext(), year, period, transaction.getWeightForTraders(), trader.getWeightOfChickens(), transaction.getPriceForTraders(), chickensPrice);
                         Vibrate.vibrate(requireContext());
                         Toast.makeText(requireContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
                         if (listener != null) {
@@ -166,6 +171,14 @@ public class TraderBill extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Common.YEAR, year);
+        outState.putString(Common.PERIOD, period);
+        outState.putString(Common.MOVED_DATA, traderJson);
     }
 
     public interface OnFragmentInteractionListener {

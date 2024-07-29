@@ -4,73 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.Periods">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/period_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/menu"
-            app:layout_constraintStart_toEndOf="@+id/add_period"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/menu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/button_ripple_effect"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/grid"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/add_period"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/button_ripple_effect"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/add_period"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <EditText
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/components_height"
-        android:layout_margin="@dimen/margin"
-        android:autofillHints=""
-        android:background="@drawable/input_filed"
-        android:drawableEnd="@drawable/search_icon"
-        android:drawablePadding="@dimen/padding"
-        android:enabled="false"
-        android:gravity="right|center"
-        android:hint="@string/search"
-        android:inputType="text"
-        android:paddingStart="@dimen/padding"
-        android:paddingEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+    tools:context=".Fragments.Months">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -79,14 +13,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/periods_recycler"
+                android:id="@+id/months_recycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

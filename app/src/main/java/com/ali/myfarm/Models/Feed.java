@@ -85,6 +85,6 @@ public class Feed {
     }
 
     public enum Type {
-        GROWING, BEGGING, END
-    } // BEGINNING
+        GROWING, BEGINNING, END
+    }
 }

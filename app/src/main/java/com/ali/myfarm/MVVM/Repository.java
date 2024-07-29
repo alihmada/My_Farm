@@ -11,6 +11,7 @@ import com.ali.myfarm.Models.Bag;
 import com.ali.myfarm.Models.Buyer;
 import com.ali.myfarm.Models.Chicken;
 import com.ali.myfarm.Models.Electricity;
+import com.ali.myfarm.Models.Expenses;
 import com.ali.myfarm.Models.Feed;
 import com.ali.myfarm.Models.Heating;
 import com.ali.myfarm.Models.Period;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,26 +93,26 @@ public class Repository {
         return mutableLiveData;
     }
 
-    public MutableLiveData<List<String>> getPeriods(Context context, String year) {
-        MutableLiveData<List<String>> mutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<AbstractMap.SimpleEntry<String, String>>> getPeriods(Context context, String year) {
+        MutableLiveData<List<AbstractMap.SimpleEntry<String, String>>> mutableLiveData = new MutableLiveData<>();
 
         Firebase.getAllPeriods(context, year).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    List<String> stringList = new ArrayList<>();
+                    List<AbstractMap.SimpleEntry<String, String>> simpleEntries = new ArrayList<>();
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         try {
                             Period period = snapshot.getValue(Period.class);
                             assert period != null;
-                            stringList.add(period.getName());
+                            simpleEntries.add(new AbstractMap.SimpleEntry<>(period.getNumber(), period.getName()));
                         } catch (Exception ignored) {
 
                         }
                     }
 
-                    mutableLiveData.setValue(stringList);
+                    mutableLiveData.setValue(simpleEntries);
                 } else mutableLiveData.setValue(null);
             }
 
@@ -474,6 +476,31 @@ public class Repository {
         return mutableLiveData;
     }
 
+    public MutableLiveData<Integer> getSold(Context context, String year, String periodName) {
+        MutableLiveData<Integer> mutableLiveData = new MutableLiveData<>();
+
+        Firebase.getSpecificPeriod(context, year, periodName).child("numberOfSold").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    Integer soldValue = dataSnapshot.getValue(Integer.class);
+                    int sold = (soldValue != null) ? soldValue : 0;
+
+                    mutableLiveData.setValue(sold);
+                } else mutableLiveData.setValue(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+
+
+        return mutableLiveData;
+    }
+
     public MutableLiveData<List<Trader>> getTraders(Context context, String year, String periodName) {
         MutableLiveData<List<Trader>> mutableLiveData = new MutableLiveData<>();
 
@@ -548,6 +575,54 @@ public class Repository {
             }
         });
 
+
+        return mutableLiveData;
+    }
+
+    public MutableLiveData<List<Expenses>> getExpenses(Context context, String year, String periodName) {
+        MutableLiveData<List<Expenses>> mutableLiveData = new MutableLiveData<>();
+
+        Firebase.getExpenses(context, year, periodName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<Expenses> expenses = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                        expenses.add(snapshot.getValue(Expenses.class));
+
+                    Collections.reverse(expenses);
+                    mutableLiveData.setValue(expenses);
+                } else mutableLiveData.setValue(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+
+
+        return mutableLiveData;
+    }
+
+    public MutableLiveData<Expenses> getExpensesItem(Context context, String year, String periodName, String id) {
+        MutableLiveData<Expenses> mutableLiveData = new MutableLiveData<>();
+
+        Firebase.getExpenses(context, year, periodName).orderByChild("id").equalTo(id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                mutableLiveData.setValue(snapshot.getValue(Expenses.class));
+                        } else mutableLiveData.setValue(null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle any errors
+                    }
+                });
 
         return mutableLiveData;
     }

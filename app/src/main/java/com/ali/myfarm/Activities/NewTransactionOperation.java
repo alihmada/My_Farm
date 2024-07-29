@@ -26,8 +26,8 @@ public class NewTransactionOperation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_transaction_operation);
 
-        mainID = requireNonNullExtra(Common.MAIN_ID);
-        periodID = requireNonNullExtra(Common.PERIOD_ID);
+        mainID = requireNonNullExtra(Common.YEAR);
+        periodID = requireNonNullExtra(Common.MONTH);
 
         if (mainID == null) {
             throw new IllegalArgumentException("Required data missing in intent extras");
@@ -59,7 +59,13 @@ public class NewTransactionOperation extends AppCompatActivity {
     private void switchView(TextView selectedView, TextView otherView, Fragment fragmentToShow) {
         setFocus(selectedView);
         clearBackground(otherView);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentToShow).commit();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in_down,   // enter animation
+                        R.anim.slide_out_down,  // exit animation
+                        R.anim.slide_in_up,     // popEnter animation
+                        R.anim.slide_out_up     // popExit animation
+                ).replace(R.id.container, fragmentToShow).commit();
     }
 
     private void setFocus(TextView textView) {

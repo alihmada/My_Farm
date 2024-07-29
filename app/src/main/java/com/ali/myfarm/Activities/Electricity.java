@@ -22,7 +22,8 @@ import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Data.Firebase;
-import com.ali.myfarm.Dialogs.ValueDialog;
+import com.ali.myfarm.Dialogs.Alert;
+import com.ali.myfarm.Dialogs.ElectricityDialog;
 import com.ali.myfarm.Intenet.Internet;
 import com.ali.myfarm.MVVM.ElectricityViewModel;
 import com.ali.myfarm.R;
@@ -31,14 +32,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Electricity extends AppCompatActivity {
-    String mainID, periodID;
-    ElectricityViewModel model;
+
+    private Handler handler;
+    private String year, month;
+    private ElectricityViewModel model;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private ConstraintLayout alert;
     private ImageView imageView;
-    private TextView textView, price;
+    private TextView textView, numberOfReceipts, priceOfReceipts, numberOfLiters, priceOfLiters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +50,21 @@ public class Electricity extends AppCompatActivity {
 
         initializeViews();
         initializeButtons();
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
+        year = Objects.requireNonNull(getIntent().getExtras()).getString(Common.YEAR);
+        month = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MONTH);
         setupSwipeRefreshLayout();
         setupViewModel();
         setupView();
     }
 
     private void initializeViews() {
-        price = findViewById(R.id.price);
+        handler = new Handler(Looper.getMainLooper());
+
+        numberOfReceipts = findViewById(R.id.number_of_receipt);
+        priceOfReceipts = findViewById(R.id.price_of_receipt);
+        numberOfLiters = findViewById(R.id.number_of_liters);
+        priceOfLiters = findViewById(R.id.price_of_liters);
+
         alert = findViewById(R.id.alert);
         imageView = findViewById(R.id.alert_image);
         textView = findViewById(R.id.alert_text);
@@ -66,9 +75,14 @@ public class Electricity extends AppCompatActivity {
 
     private void initializeButtons() {
         ImageButton add = findViewById(R.id.add);
-        add.setOnClickListener(view -> new Handler(Looper.getMainLooper()).post(() -> {
-            ValueDialog valueDialog = new ValueDialog(R.string.price, ValueDialog.inputType.DECIMAL, Common.DECIMAL_REGEX, price -> Firebase.setElectricity(Electricity.this, mainID, periodID, new com.ali.myfarm.Models.Electricity(DateAndTime.getCurrentDateTime(), Double.parseDouble(price))));
-            valueDialog.show(getSupportFragmentManager(), "");
+        add.setOnClickListener(view -> handler.post(() -> {
+            if (!Common.isFinished) {
+                ElectricityDialog dialog = new ElectricityDialog((type, number, date, price) -> Firebase.setElectricity(Electricity.this, year, month,
+                        new com.ali.myfarm.Models.Electricity(DateAndTime.getCurrentDateTime(), price, type, number)));
+                dialog.show(getSupportFragmentManager(), "");
+            } else {
+                showAlert(getString(R.string.finished));
+            }
         }));
 
         ImageButton back = findViewById(R.id.back);
@@ -107,29 +121,46 @@ public class Electricity extends AppCompatActivity {
 
     private void setRecyclerView() {
         model.getElectricity().observe(this, electricityList -> {
-            if (electricityList != null) {
-                if (!electricityList.isEmpty()) {
-                    setupRecyclerViewData(electricityList);
-                    setupCards(electricityList);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (electricityList == null || electricityList.isEmpty()) {
+                handleEmptyElectricity();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
-                price.setText("0");
+                setupRecyclerViewData(electricityList);
+                handler.post(() -> setupCards(electricityList));
+                alert.setVisibility(View.GONE);
             }
         });
     }
 
+    private void handleEmptyElectricity() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
+        setTextViewText(0, 0, 0, 0); // Reset values if needed
+    }
+
     private void setupCards(List<com.ali.myfarm.Models.Electricity> electricityList) {
-        double sum = 0;
+        double receiptsCount = 0, litersCount = 0, receiptsPrice = 0, litersPrice = 0;
+
         for (com.ali.myfarm.Models.Electricity electricity : electricityList) {
-            sum += electricity.getPrice();
+            if (electricity.getType() == com.ali.myfarm.Models.Electricity.Type.RECEIPT) {
+                receiptsCount += electricity.getNumber();
+                receiptsPrice += Calculation.getElectricityOrHeatingPrice(electricity.getNumber(), electricity.getPrice());
+            } else {
+                litersCount += electricity.getNumber();
+                litersPrice += Calculation.getElectricityOrHeatingPrice(electricity.getNumber(), electricity.getPrice());
+            }
         }
 
-        price.setText(Calculation.getNumber(sum));
+        setTextViewText(receiptsCount, receiptsPrice, litersCount, litersPrice);
+    }
+
+    private void setTextViewText(double receiptsCount, double receiptsPrice, double litersCount, double litersPrice) {
+        numberOfReceipts.setText(Calculation.formatNumberWithCommas(receiptsCount));
+        priceOfReceipts.setText(Calculation.formatNumberWithCommas(receiptsPrice));
+        numberOfLiters.setText(Calculation.formatNumberWithCommas(litersCount));
+        priceOfLiters.setText(Calculation.formatNumberWithCommas(litersPrice));
     }
 
     private void setupRecyclerViewData(List<com.ali.myfarm.Models.Electricity> electricityList) {
@@ -139,6 +170,10 @@ public class Electricity extends AppCompatActivity {
 
     private void setupViewModel() {
         model = new ViewModelProvider(this).get(ElectricityViewModel.class);
-        model.initialize(this, mainID, periodID);
+        model.initialize(this, year, month);
+    }
+
+    private void showAlert(String message) {
+        handler.post(() -> new Alert(R.drawable.error, message).show(getSupportFragmentManager(), ""));
     }
 }

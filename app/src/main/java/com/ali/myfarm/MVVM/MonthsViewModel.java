@@ -6,10 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.AbstractMap;
 import java.util.List;
 
-public class PeriodsViewModel extends ViewModel {
-    private MutableLiveData<List<String>> mutableLiveData;
+public class MonthsViewModel extends ViewModel {
+    private MutableLiveData<List<AbstractMap.SimpleEntry<String, String>>> mutableLiveData;
 
     public void initialize(Context context, String year) {
         if (mutableLiveData != null) {
@@ -19,7 +20,7 @@ public class PeriodsViewModel extends ViewModel {
         mutableLiveData = repository.getPeriods(context, year);
     }
 
-    public LiveData<List<String>> getPeriods() {
+    public LiveData<List<AbstractMap.SimpleEntry<String, String>>> getPeriods() {
         return mutableLiveData;
     }
 }

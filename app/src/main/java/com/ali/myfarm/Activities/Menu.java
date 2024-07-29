@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class Menu extends AppCompatActivity {
         gson = new Gson();
         handler = new Handler(Looper.getMainLooper());
 
+        setStatusBarColor();
         createQr();
         initializeViews();
         initializeButtons();
@@ -53,6 +55,16 @@ public class Menu extends AppCompatActivity {
         if (user != null) {
             setupUserInfo(user);
         }
+    }
+
+    private int getPrimaryColor() {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true);
+        return typedValue.data;
+    }
+
+    private void setStatusBarColor() {
+        getWindow().setStatusBarColor(getPrimaryColor());
     }
 
     private void createQr() {

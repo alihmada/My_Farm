@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
 import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Models.Heating;
 import com.ali.myfarm.R;
 
@@ -35,7 +36,7 @@ public class HeatingAdapter extends RecyclerView.Adapter<HeatingAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(heatingList.get(position).getDate());
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), heatingList.get(position).getDate()));
         if (heatingList.get(position).getType() == Heating.Type.GAS) {
             holder.type.setText(holder.type.getContext().getString(R.string.num_of_gas_cylinders));
             holder.title.setText(ContextCompat.getString(holder.itemView.getContext(), R.string.cylinder));
@@ -46,7 +47,7 @@ public class HeatingAdapter extends RecyclerView.Adapter<HeatingAdapter.ViewHold
             holder.item.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.gasoline));
         }
         holder.numberOfItems.setText(Calculation.getNumber(heatingList.get(position).getNumber()));
-        holder.price.setText(Calculation.getNumber(Calculation.getHeatingPrice(heatingList.get(position).getNumber(), heatingList.get(position).getPrice())));
+        holder.price.setText(Calculation.formatNumberWithCommas(Calculation.getElectricityOrHeatingPrice(heatingList.get(position).getNumber(), heatingList.get(position).getPrice())));
 
         Animation.startAnimation(holder.itemView);
     }

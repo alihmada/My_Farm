@@ -59,8 +59,8 @@ public class NewPeriod extends DialogFragment {
     private void setupConfirmButton(Dialog dialog) {
         Button confirm = dialog.findViewById(R.id.done);
         confirm.setOnClickListener(v -> {
-            String numberOfChickens = this.numberOfChickens.getText().toString();
-            String priceOfAChick = this.priceOfAChick.getText().toString();
+            String numberOfChickens = this.numberOfChickens.getText().toString().trim();
+            String priceOfAChick = this.priceOfAChick.getText().toString().trim();
             if (isValidData(numberOfChickens, priceOfAChick)) {
                 listener.onDataEntered(numberOfChickens, priceOfAChick);
                 dismiss();
@@ -76,8 +76,8 @@ public class NewPeriod extends DialogFragment {
     }
 
     private void handleInputErrors() {
-        validateAndSetBackground(numberOfChickens, Matcher.isNumber(numberOfChickens.getText().toString()));
-        validateAndSetBackground(priceOfAChick, Matcher.isFloatingNumber(priceOfAChick.getText().toString()));
+        validateAndSetBackground(numberOfChickens, Matcher.isNumber(numberOfChickens.getText().toString().trim()));
+        validateAndSetBackground(priceOfAChick, Matcher.isFloatingNumber(priceOfAChick.getText().toString().trim()));
         Toast.makeText(requireContext(), requireContext().getString(R.string.check_inputs), Toast.LENGTH_SHORT).show();
     }
 

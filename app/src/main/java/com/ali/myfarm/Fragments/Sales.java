@@ -97,18 +97,21 @@ public class Sales extends Fragment {
 
     private void setRecyclerView() {
         model.getSales().observe(requireActivity(), sales -> {
-            if (sales != null) {
-                if (!sales.isEmpty()) {
-                    setupRecyclerViewData(sales);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (sales == null || sales.isEmpty()) {
+                handleEmptySales();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(sales);
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptySales() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Sale> sales) {

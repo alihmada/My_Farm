@@ -135,7 +135,7 @@ public class HeatingDialog extends DialogFragment {
         }
 
         if (number.getVisibility() != View.GONE) {
-            if (isValidInput(number.getText().toString())) {
+            if (!isValidInput(number.getText().toString().trim())) {
                 number.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.error_p));
             } else {
                 number.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.input_filed));
@@ -143,7 +143,7 @@ public class HeatingDialog extends DialogFragment {
         }
 
         if (price.getVisibility() != View.GONE) {
-            if (isValidInput(price.getText().toString())) {
+            if (!isValidInput(price.getText().toString().trim())) {
                 price.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.error_p));
             } else {
                 price.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.input_filed));

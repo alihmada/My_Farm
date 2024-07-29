@@ -1,211 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/outlinedCardViewStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_0.5"
+    android:layout_marginBottom="@dimen/margin"
+    android:background="@drawable/row_corner">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/num"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:background="@drawable/text_view_circle"
+        android:backgroundTint="@color/account_filed"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/date_time"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:gravity="center"
+        android:textSize="@dimen/secondary_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/num"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/num" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/num"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_time">
 
-        <TextView
-            android:id="@+id/num"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin"
-            android:background="@drawable/text_view_circle"
-            android:backgroundTint="?colorPrimary"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/date_time"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/price_card"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/margin"
-            android:gravity="center"
-            android:textSize="@dimen/secondary_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/num"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/num" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_weight="1"
+            android:background="@drawable/row_corner">
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/num"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date_time">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/price_card"
-                style="@style/outlinedCardViewStyleWithoutMargin"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginBottom="@dimen/margin"
-                android:layout_weight="1">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin"
-                        android:layout_marginEnd="@dimen/margin"
-                        android:text="@string/price"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/feed_bag2"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="@dimen/margin_0.5"
-                        android:layout_marginBottom="@dimen/margin"
-                        android:src="@drawable/payment"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_0.5"
-                        android:gravity="center"
-                        android:maxLength="7"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/feed_bag2"
-                        app:layout_constraintEnd_toStartOf="@+id/feed_bag2"
-                        app:layout_constraintTop_toTopOf="@+id/feed_bag2" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/outlinedCardViewStyleWithoutMargin"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin_0.5"
-                android:layout_marginBottom="@dimen/margin"
-                android:layout_weight="0.8">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin"
-                        android:layout_marginEnd="@dimen/margin"
-                        android:text="@string/operation"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/operation"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="@dimen/margin_0.5"
-                        android:layout_marginBottom="@dimen/margin"
-                        android:src="@drawable/add"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/textView1"
-                        app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
-                    <TextView
-                        android:id="@+id/operation_txt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_0.5"
-                        android:gravity="center"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/operation"
-                        app:layout_constraintEnd_toStartOf="@+id/operation"
-                        app:layout_constraintTop_toTopOf="@+id/operation" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/outlinedCardViewStyleWithoutMargin"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_0.5"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
+                android:text="@string/price"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/feed_bag2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="@dimen/margin_0.5"
                 android:layout_marginBottom="@dimen/margin"
-                android:layout_weight="1">
+                android:src="@drawable/payment"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_0.5"
+                android:gravity="center"
+                android:maxLength="7"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/feed_bag2"
+                app:layout_constraintEnd_toStartOf="@+id/feed_bag2"
+                app:layout_constraintTop_toTopOf="@+id/feed_bag2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin"
-                        android:layout_marginEnd="@dimen/margin"
-                        android:text="@string/num_of_bags"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin_0.5"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_weight="0.8"
+            android:background="@drawable/row_corner">
 
-                    <ImageView
-                        android:id="@+id/feed_bag"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="@dimen/margin_0.5"
-                        android:layout_marginBottom="@dimen/margin"
-                        android:src="@drawable/growing"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/textView"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:text="@string/operation"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/number_of_bags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_0.5"
-                        android:gravity="center"
-                        android:maxLength="6"
-                        android:textSize="@dimen/secondary_text_size"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/feed_bag"
-                        app:layout_constraintEnd_toStartOf="@+id/feed_bag"
-                        app:layout_constraintTop_toTopOf="@+id/feed_bag" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <ImageView
+                android:id="@+id/operation"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="@dimen/margin_0.5"
+                android:layout_marginBottom="@dimen/margin"
+                android:src="@drawable/add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView1"
+                app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/operation_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_0.5"
+                android:gravity="center"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/operation"
+                app:layout_constraintEnd_toStartOf="@+id/operation"
+                app:layout_constraintTop_toTopOf="@+id/operation" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_0.5"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_weight="1"
+            android:background="@drawable/row_corner">
 
-</com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:text="@string/num_of_bags"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/feed_bag"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="@dimen/margin_0.5"
+                android:layout_marginBottom="@dimen/margin"
+                android:src="@drawable/growing"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/number_of_bags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_0.5"
+                android:gravity="center"
+                android:maxLength="6"
+                android:textSize="@dimen/secondary_text_size"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/feed_bag"
+                app:layout_constraintEnd_toStartOf="@+id/feed_bag"
+                app:layout_constraintTop_toTopOf="@+id/feed_bag" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

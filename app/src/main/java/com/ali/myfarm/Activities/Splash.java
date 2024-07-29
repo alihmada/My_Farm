@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ali.myfarm.Classes.Ciphering;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Data.Firebase;
-import com.ali.myfarm.Models.Farm;
 import com.ali.myfarm.Models.User;
 import com.ali.myfarm.R;
 import com.google.firebase.database.DataSnapshot;
@@ -19,9 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Splash extends AppCompatActivity {
 
@@ -33,12 +30,23 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        setStatusBarColor();
         try {
             sharedPreferences = getSharedPreferences(Ciphering.decrypt(Common.SHARED_PREFERENCE_NAME), MODE_PRIVATE);
         } catch (Exception ignored) {
         }
 
         redirectToAppropriateScreenWithDelay();
+    }
+
+    private int getPrimaryColor() {
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true);
+        return typedValue.data;
+    }
+
+    private void setStatusBarColor() {
+        getWindow().setStatusBarColor(getPrimaryColor());
     }
 
     private void redirectToAppropriateScreenWithDelay() {

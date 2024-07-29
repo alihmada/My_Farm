@@ -10,7 +10,9 @@
     <color name="jordy_blue">#8BB3FE</color>
     <color name="YInMn_blue">#425D99</color>
 
-    <color name="red">#FF0000</color>
+    <color name="red">#FF2424</color>  <!-- F97775 -->
     <color name="green">#50C917</color>
+
+    <color name="lavender">#D5DCEF</color>
 
 </resources>

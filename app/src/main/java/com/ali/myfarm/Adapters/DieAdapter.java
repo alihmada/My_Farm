@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
+import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Models.Chicken;
 import com.ali.myfarm.R;
 
@@ -33,9 +35,9 @@ public class DieAdapter extends RecyclerView.Adapter<DieAdapter.ViewHolder> impl
     @Override
     public void onBindViewHolder(@NonNull DieAdapter.ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(chickens.get(position).getDate());
-        holder.alive.setText(String.valueOf(chickens.get(position).getAlive()));
-        holder.dead.setText(String.valueOf(chickens.get(position).getDead()));
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), chickens.get(position).getDate()));
+        holder.alive.setText(Calculation.formatNumberWithCommas(chickens.get(position).getAlive()));
+        holder.dead.setText(Calculation.formatNumberWithCommas(chickens.get(position).getDead()));
 
         Animation.startAnimation(holder.itemView);
     }

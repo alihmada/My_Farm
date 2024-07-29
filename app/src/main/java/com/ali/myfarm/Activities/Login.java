@@ -28,8 +28,6 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        setStatusBarColor();
-
         bundle = new Bundle();
 
         inputText = findViewById(R.id.constraintLayout2);
@@ -77,10 +75,6 @@ public class Login extends AppCompatActivity {
                 view4.setBackgroundColor(getColor(R.color.red));
             }
         });
-    }
-
-    private void setStatusBarColor() {
-        getWindow().setStatusBarColor(getResources().getColor(R.color.black));
     }
 
     private void changeBackground(int stroke) {

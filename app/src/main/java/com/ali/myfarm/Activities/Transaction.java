@@ -7,16 +7,13 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ali.myfarm.Adapters.FragmentViewPagerAdapter;
 import com.ali.myfarm.Classes.Common;
-import com.ali.myfarm.Data.Firebase;
-import com.ali.myfarm.Dialogs.TransactionInfo;
+import com.ali.myfarm.Dialogs.Alert;
 import com.ali.myfarm.Fragments.Buyers;
 import com.ali.myfarm.Fragments.Traders;
-import com.ali.myfarm.MVVM.TransactionViewModel;
 import com.ali.myfarm.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -24,8 +21,7 @@ import java.util.Objects;
 
 public class Transaction extends AppCompatActivity {
 
-    private com.ali.myfarm.Models.Transaction transaction;
-    private TransactionViewModel model;
+    private Handler handler;
     private String mainID, periodID;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -37,8 +33,9 @@ public class Transaction extends AppCompatActivity {
         setContentView(R.layout.activity_transaction);
 
         bundle = new Bundle();
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.PERIOD_ID);
+        handler = new Handler(Looper.getMainLooper());
+        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.YEAR);
+        periodID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MONTH);
 
         initializeViews();
     }
@@ -48,24 +45,29 @@ public class Transaction extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         initializeButtons();
         setupViewPager();
-        setupViewModel();
-        getTransaction();
     }
 
     private void initializeButtons() {
         findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
         findViewById(R.id.add).setOnClickListener(view -> {
-            Intent intent = new Intent(this, NewTransactionOperation.class);
-            bundle.putString(Common.MAIN_ID, mainID);
-            bundle.putString(Common.PERIOD_ID, periodID);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if (!Common.isFinished) {
+                Intent intent = new Intent(this, NewTransactionOperation.class);
+                bundle.putString(Common.YEAR, mainID);
+                bundle.putString(Common.MONTH, periodID);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } else {
+                showAlert(getString(R.string.finished));
+            }
         });
 
         findViewById(R.id.info).setOnClickListener(v -> new Handler(Looper.getMainLooper()).post(() -> {
-            TransactionInfo transactionInfo = new TransactionInfo(transaction);
-            transactionInfo.show(getSupportFragmentManager(), "");
+            Intent intent = new Intent(this, TransactionInformation.class);
+            bundle.putString(Common.YEAR, mainID);
+            bundle.putString(Common.MONTH, periodID);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }));
     }
 
@@ -81,27 +83,7 @@ public class Transaction extends AppCompatActivity {
         if (die != null) die.select();
     }
 
-    private void setupViewModel() {
-        model = new ViewModelProvider(this).get(TransactionViewModel.class);
-        model.initialize(this, mainID, periodID);
-    }
-
-    private void getTransaction() {
-        model.getTransaction().observe(this, transaction -> {
-            if (transaction != null) {
-                this.transaction = transaction;
-            } else {
-                Firebase.setTransactionBranchThatPeriodHave(Transaction.this,
-                        mainID,
-                        periodID,
-                        new com.ali.myfarm.Models.Transaction(
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
-                        )
-                );
-            }
-        });
+    private void showAlert(String message) {
+        handler.post(() -> new Alert(R.drawable.error, message).show(getSupportFragmentManager(), ""));
     }
 }

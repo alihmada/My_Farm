@@ -26,8 +26,8 @@ import java.util.List;
 
 public class Growing extends Fragment {
 
-    String mainID, periodID;
-    GrowingViewModel model;
+    private String mainID, periodID;
+    private GrowingViewModel model;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -96,19 +96,21 @@ public class Growing extends Fragment {
 
     private void setRecyclerView() {
         model.getGrowing().observe(requireActivity(), bags -> {
-            if (bags != null) {
-                setupRecyclerViewData(bags);
-                if (!bags.isEmpty()) {
-                    alert.setVisibility(View.GONE);
-                } else {
-                    alert.setVisibility(View.VISIBLE);
-                }
-            } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-            }
             progressBar.setVisibility(View.GONE);
+
+            if (bags == null || bags.isEmpty()) {
+                handleEmptyBags();
+            } else {
+                setupRecyclerViewData(bags);
+                alert.setVisibility(View.GONE);
+            }
         });
+    }
+
+    private void handleEmptyBags() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Bag> bags) {

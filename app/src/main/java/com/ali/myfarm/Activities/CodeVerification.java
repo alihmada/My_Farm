@@ -36,7 +36,6 @@ public class CodeVerification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_verification);
-        setStatusBarColor();
 
         Loading.progressDialogConstructor(this);
 
@@ -102,10 +101,6 @@ public class CodeVerification extends AppCompatActivity {
                 Loading.showProgressDialog();
             }
         });
-    }
-
-    private void setStatusBarColor() {
-        getWindow().setStatusBarColor(getResources().getColor(R.color.black));
     }
 
     private void setupTextWatchers() {

@@ -29,7 +29,7 @@ public class Heating extends Service {
         this.number = number;
     }
 
-    public static enum Type {
+    public enum Type {
         DIESEL, GAS
     }
 }

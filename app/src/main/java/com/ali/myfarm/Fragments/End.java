@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ali.myfarm.Adapters.EndAdapter;
-import com.ali.myfarm.Adapters.GrowingAdapter;
 import com.ali.myfarm.Classes.FirstItemMarginDecoration;
 import com.ali.myfarm.Intenet.Internet;
 import com.ali.myfarm.MVVM.EndViewModel;
@@ -27,8 +26,8 @@ import java.util.List;
 
 public class End extends Fragment {
 
-    String mainID, periodID;
-    EndViewModel model;
+    private String mainID, periodID;
+    private EndViewModel model;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -98,18 +97,21 @@ public class End extends Fragment {
 
     private void setRecyclerView() {
         model.getEnd().observe(requireActivity(), bags -> {
-            if (bags != null) {
-                if (!bags.isEmpty()) {
-                    setupRecyclerViewData(bags);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (bags == null || bags.isEmpty()) {
+                handleEmptyBags();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(bags);
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptyBags() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Bag> bags) {

@@ -19,13 +19,13 @@ import com.ali.myfarm.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements Filterable {
+public class YearsAdapter extends RecyclerView.Adapter<YearsAdapter.ViewHolder> implements Filterable {
     static List<String> filteredYears;
     private final ViewOnClickListener viewOnClickListener;
     private final List<String> years;
 
 
-    public MainAdapter(List<String> years, ViewOnClickListener viewOnClickListener) {
+    public YearsAdapter(List<String> years, ViewOnClickListener viewOnClickListener) {
         this.viewOnClickListener = viewOnClickListener;
         filteredYears = new ArrayList<>(years);
         this.years = years;
@@ -88,7 +88,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                         filteredYears.addAll(filteredList);
 
                         // Dispatch the specific change events to the adapter
-                        diffResult.dispatchUpdatesTo(MainAdapter.this);
+                        diffResult.dispatchUpdatesTo(YearsAdapter.this);
                     }
                 }
             }

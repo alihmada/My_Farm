@@ -15,7 +15,6 @@ import com.ali.myfarm.Classes.Animation;
 import com.ali.myfarm.Classes.DiffCallback;
 import com.ali.myfarm.Interfaces.ViewOnClickListener;
 import com.ali.myfarm.Models.Farm;
-import com.ali.myfarm.Models.Person;
 import com.ali.myfarm.R;
 
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ public class FarmsAdapter extends RecyclerView.Adapter<FarmsAdapter.ViewHolder> 
 
             name = itemView.findViewById(R.id.name);
 
-            itemView.setOnClickListener(v -> viewOnClickListener.onClickListener(String.valueOf(filteredFarms.get(getAdapterPosition()).getRoot())));
+            itemView.setOnClickListener(v -> viewOnClickListener.onClickListener(String.valueOf(filteredFarms.get(getBindingAdapterPosition()).getRoot())));
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
 import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Interfaces.ViewOnClickListener;
 import com.ali.myfarm.Models.Trader;
 import com.ali.myfarm.R;
@@ -36,11 +37,11 @@ public class TradersTransactionAdapter extends RecyclerView.Adapter<TradersTrans
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(traders.get(position).getDate());
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), traders.get(position).getDate()));
         holder.name.setText(traders.get(position).getName());
         holder.count.setText(String.valueOf(traders.get(position).getNumberOfChickens()));
         double w = Calculation.getChickensWeight(traders.get(position).getTotalWeightOfCages(), traders.get(position).getTotalWeightOfEmptyCages());
-        holder.weight.setText(Calculation.getNumber(w));
+        holder.weight.setText(Calculation.formatNumberWithCommas(w));
         holder.price.setText(Calculation.formatNumberWithCommas(Calculation.getTotalPrice(w, traders.get(position).getPrice())));
 
 

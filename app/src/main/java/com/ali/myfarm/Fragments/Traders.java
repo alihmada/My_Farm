@@ -104,18 +104,21 @@ public class Traders extends Fragment implements ViewOnClickListener {
     private void setRecyclerView() {
 
         model.getTraders().observe(requireActivity(), traders -> {
-            if (traders != null) {
-                if (!traders.isEmpty()) {
-                    setupRecyclerViewData(traders);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (traders == null || traders.isEmpty()) {
+                handleEmptyTraders();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(traders);
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptyTraders() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Trader> traders) {

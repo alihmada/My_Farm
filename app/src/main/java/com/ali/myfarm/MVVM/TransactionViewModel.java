@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.ali.myfarm.Models.Trader;
 import com.ali.myfarm.Models.Transaction;
-
-import java.util.List;
 
 public class TransactionViewModel extends ViewModel {
     private MutableLiveData<Transaction> mutableLiveData;

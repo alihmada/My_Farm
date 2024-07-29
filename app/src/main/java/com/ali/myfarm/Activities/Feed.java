@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ali.myfarm.Adapters.FragmentViewPagerAdapter;
+import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Classes.Vibrate;
@@ -29,7 +31,6 @@ import com.ali.myfarm.MVVM.FeedViewModel;
 import com.ali.myfarm.MVVM.GrowingViewModel;
 import com.ali.myfarm.Models.Bag;
 import com.ali.myfarm.R;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -69,8 +70,8 @@ public class Feed extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
 
         Bundle extras = Objects.requireNonNull(getIntent().getExtras());
-        mainID = extras.getString(Common.MAIN_ID);
-        periodID = extras.getString(Common.PERIOD_ID);
+        mainID = extras.getString(Common.YEAR);
+        periodID = extras.getString(Common.MONTH);
     }
 
     private void initializeViewModels() {
@@ -88,12 +89,11 @@ public class Feed extends AppCompatActivity {
     }
 
     private void setupHeader() {
-        header.setText(String.format("%s - %s", periodID, mainID));
+        header.setText(String.format("%s - %s", DateAndTime.getArabicNameOfMonth(periodID), mainID));
     }
 
     private void setupViewPager() {
-        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(
-                getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(new End(mainID, periodID), getString(R.string.over));
         adapter.addFragment(new Beginning(mainID, periodID), getString(R.string.initialize));
         adapter.addFragment(new Growing(mainID, periodID), getString(R.string.growing));
@@ -125,13 +125,13 @@ public class Feed extends AppCompatActivity {
 
     private void updateCardText(AtomicInteger value, TextView textView, int newValue) {
         value.set(newValue);
-        textView.setText(String.valueOf(value.get()));
+        textView.setText(Calculation.formatNumberWithCommas(value.get()));
     }
 
     private void setupCardsOnLongClick(AtomicInteger growing, AtomicInteger initialize, AtomicInteger end) {
-        MaterialCardView growingCard = findViewById(R.id.growing);
-        MaterialCardView initializeCard = findViewById(R.id.initiator);
-        MaterialCardView endCard = findViewById(R.id.end);
+        LinearLayout growingCard = findViewById(R.id.growing);
+        LinearLayout initializeCard = findViewById(R.id.initiator);
+        LinearLayout endCard = findViewById(R.id.end);
 
         View.OnLongClickListener onLongClickListener = v -> {
             int id = v.getId();
@@ -165,12 +165,7 @@ public class Feed extends AppCompatActivity {
         }
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            PopupFeed popupFeed = new PopupFeed(
-                    imageResource,
-                    String.valueOf(total.get()),
-                    String.valueOf(total.get() - currentCount.get()),
-                    String.valueOf(currentCount.get())
-            );
+            PopupFeed popupFeed = new PopupFeed(imageResource, String.valueOf(total.get()), String.valueOf(total.get() - currentCount.get()), String.valueOf(currentCount.get()));
             popupFeed.show(getSupportFragmentManager(), "");
             Vibrate.vibrate(Feed.this);
         });
@@ -182,21 +177,25 @@ public class Feed extends AppCompatActivity {
     }
 
     private void showFeedStatusDialog() {
-        FeedStatus status = new FeedStatus((type, operation, numberOfBags, priceOfTon) -> {
-            if (isValidOperation(type, numberOfBags)) {
-                executeFirebaseOperation(type, numberOfBags, priceOfTon, operation);
-            } else {
-                showAlert(R.drawable.error, getString(R.string.bags_num_out));
-            }
-        });
-        status.show(getSupportFragmentManager(), "");
+        if (!Common.isFinished) {
+            FeedStatus status = new FeedStatus((type, operation, numberOfBags, priceOfTon) -> {
+                if (operation == Bag.Operation.ADD || isValidOperation(type, numberOfBags)) {
+                    executeFirebaseOperation(type, numberOfBags, priceOfTon, operation);
+                } else {
+                    showAlert(R.drawable.error, getString(R.string.bags_num_out));
+                }
+            });
+            status.show(getSupportFragmentManager(), "");
+        } else {
+            showAlert(R.drawable.error, getString(R.string.finished));
+        }
     }
 
     private boolean isValidOperation(com.ali.myfarm.Models.Feed.Type type, int numberOfBags) {
         switch (type) {
             case GROWING:
                 return feed.getGrowing() - numberOfBags >= 0;
-            case BEGGING:
+            case BEGINNING:
                 return feed.getBeginning() - numberOfBags >= 0;
             case END:
                 return feed.getEnd() - numberOfBags >= 0;
@@ -211,7 +210,7 @@ public class Feed extends AppCompatActivity {
             case GROWING:
                 Firebase.setGrowing(this, mainID, periodID, bag);
                 break;
-            case BEGGING:
+            case BEGINNING:
                 Firebase.setInitialize(this, mainID, periodID, bag);
                 break;
             case END:

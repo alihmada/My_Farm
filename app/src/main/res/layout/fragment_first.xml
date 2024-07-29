@@ -5,74 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.More">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/period_header">
-
-        <TextView
-            android:id="@+id/period_head"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/period_day"
-            app:layout_constraintEnd_toStartOf="@+id/period_day"
-            app:layout_constraintStart_toEndOf="@+id/info"
-            app:layout_constraintTop_toTopOf="@+id/period_day" />
-
-        <TextView
-            android:id="@+id/period_day"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="@dimen/margin"
-            android:background="@drawable/circle"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/back"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/button_ripple_effect"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/info"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/button_ripple_effect"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/info"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    tools:context=".Fragments.First">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/fire"
+            android:id="@+id/feed"
             style="@style/outlinedCardViewStyleWithoutMargin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -81,27 +24,33 @@
             android:layout_marginEnd="@dimen/margin_0.5"
             android:layout_marginBottom="@dimen/margin_0.5"
             android:layout_weight="1"
-            android:tooltipText="@string/heating">
+            android:tooltipText="@string/feed">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
-                    android:src="@drawable/fire"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_weight="2"
+                    android:src="@drawable/feed" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/feed_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/transaction"
+            android:id="@+id/chicken"
             style="@style/outlinedCardViewStyleWithoutMargin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -110,23 +59,29 @@
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin_0.5"
             android:layout_weight="1"
-            android:tooltipText="@string/transaction">
+            android:tooltipText="@string/chickens">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
-                    android:src="@drawable/transaction"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_weight="2"
+                    android:src="@drawable/chick" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/chicken_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
@@ -138,7 +93,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/expenses"
+            android:id="@+id/more"
             style="@style/outlinedCardViewStyleWithoutMargin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -147,7 +102,7 @@
             android:layout_marginEnd="@dimen/margin_0.5"
             android:layout_marginBottom="@dimen/margin"
             android:layout_weight="1"
-            android:tooltipText="@string/expenses">
+            android:tooltipText="@string/more">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -158,7 +113,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
                     android:layout_weight="2"
-                    android:src="@drawable/expense"
+                    android:src="@drawable/baseline_more_horiz_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -168,7 +123,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/energy"
+            android:id="@+id/medicine"
             style="@style/outlinedCardViewStyleWithoutMargin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -177,7 +132,7 @@
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
             android:layout_weight="1"
-            android:tooltipText="@string/electricity">
+            android:tooltipText="@string/medicine">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -189,7 +144,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/margin"
                     android:layout_weight="2"
-                    android:src="@drawable/energy"
+                    android:src="@drawable/medicine"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

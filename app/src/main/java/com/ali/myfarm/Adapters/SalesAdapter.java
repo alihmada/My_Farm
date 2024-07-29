@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.myfarm.Classes.Animation;
+import com.ali.myfarm.Classes.Calculation;
+import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Models.Sale;
 import com.ali.myfarm.R;
 
@@ -33,9 +35,9 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull SalesAdapter.ViewHolder holder, int position) {
         holder.number.setText(String.valueOf(position + 1));
-        holder.dateTime.setText(sales.get(position).getDateTime());
-        holder.sales.setText(String.valueOf(sales.get(position).getSale()));
-        holder.remaining.setText(String.valueOf(sales.get(position).getRemaining()));
+        holder.dateTime.setText(DateAndTime.getDate(holder.dateTime.getContext(), sales.get(position).getDateTime()));
+        holder.sales.setText(Calculation.formatNumberWithCommas(sales.get(position).getSale()));
+        holder.remaining.setText(Calculation.formatNumberWithCommas(sales.get(position).getRemaining()));
 
         Animation.startAnimation(holder.itemView);
     }

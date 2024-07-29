@@ -26,11 +26,12 @@ public class Bill extends AppCompatActivity implements TraderBill.OnFragmentInte
 
         bundle = new Bundle();
 
-        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.MAIN_ID);
-        periodID = getIntent().getExtras().getString(Common.PERIOD_ID);
+        mainID = Objects.requireNonNull(getIntent().getExtras()).getString(Common.YEAR);
+        periodID = getIntent().getExtras().getString(Common.MONTH);
         boolean isTrader = getIntent().getBooleanExtra(Common.IS_TRADER, false);
 
         String movedData = getIntent().getExtras().getString(Common.MOVED_DATA);
+
         Fragment fragment = isTrader ? new TraderBill(mainID, periodID, movedData) : new BuyerBill(mainID, periodID, movedData);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
@@ -42,8 +43,8 @@ public class Bill extends AppCompatActivity implements TraderBill.OnFragmentInte
     public void onFinishActivity() {
         Intent intent = new Intent(this, Transaction.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        bundle.putString(Common.MAIN_ID, mainID);
-        bundle.putString(Common.PERIOD_ID, periodID);
+        bundle.putString(Common.YEAR, mainID);
+        bundle.putString(Common.MONTH, periodID);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();

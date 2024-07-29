@@ -1,5 +1,9 @@
 package com.ali.myfarm.Classes;
 
+import android.content.Context;
+
+import com.ali.myfarm.R;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +40,9 @@ public class DateAndTime {
         return new DateFormatSymbols(new Locale("ar")).getMonths()[getCurrentMonth()];
     }
 
+    public static String getArabicNameOfMonth(String month) {
+        return new DateFormatSymbols(new Locale("ar")).getMonths()[Integer.parseInt(month) - 1];
+    }
 
     public static String getPastDays(String firstDate, String secondDate) {
         try {
@@ -71,7 +78,7 @@ public class DateAndTime {
         return calendar.getTime();
     }
 
-    private static String handleAMPM(String date) {
+    public static String handleAMPM(String date) {
         if ((date.contains("م") || date.contains("ص")) && Locale.getDefault().getLanguage().equals("en")) {
             date = date.replace("م", "PM").replace("ص", "AM");
         } else if ((date.contains("PM") || date.contains("AM")) && Locale.getDefault().getLanguage().equals("ar")) {
@@ -80,4 +87,64 @@ public class DateAndTime {
         return date;
     }
 
+    public static String extractDateOnly(String dateTime) {
+
+        dateTime = handleAMPM(dateTime);
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+        try {
+            Date date = inputFormat.parse(dateTime);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return "";
+        }
+    }
+
+    public static String getDate(Context context, String date) {
+        date = handleAMPM(date);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a");
+
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+            LocalDate inputDate = dateTime.toLocalDate();
+            LocalDate today = LocalDate.now();
+            LocalDate yesterday = today.minusDays(1);
+
+            String dayString;
+            if (inputDate.equals(today)) {
+                dayString = context.getString(R.string.today);
+            } else if (inputDate.equals(yesterday)) {
+                dayString = context.getString(R.string.yesterday);
+            } else {
+                dayString = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            }
+
+            return formatAndSetDate(context, new String[]{
+                    dayString,
+                    dateTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+            });
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private static String formatAndSetDate(Context context, String[] dateAndTime) {
+        String formattedDate;
+        if (dateAndTime[0].equals(context.getString(R.string.today)) || dateAndTime[0].equals(context.getString(R.string.yesterday))) {
+            formattedDate = String.format("%s %s %s",
+                    dateAndTime[0],
+                    context.getString(R.string.hour),
+                    dateAndTime[1].replace("AM", "ص").replace("PM", "م"));
+
+        } else {
+            formattedDate = String.format("%s %s %s %s",
+                    context.getString(R.string.day), dateAndTime[0],
+                    context.getString(R.string.hour),
+                    dateAndTime[1].replace("AM", "ص").replace("PM", "م"));
+        }
+        return formattedDate;
+    }
 }

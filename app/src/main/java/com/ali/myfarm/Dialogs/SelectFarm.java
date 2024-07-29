@@ -189,13 +189,13 @@ public class SelectFarm extends DialogFragment implements ViewOnClickListener {
         }));
     }
 
-    public interface SelectFarmListener {
-        void onDataEntered(String root);
-    }
-
     @Override
     public void onClickListener(String root) {
         listener.onDataEntered(root);
         dismiss();
+    }
+
+    public interface SelectFarmListener {
+        void onDataEntered(String root);
     }
 }

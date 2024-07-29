@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.Second">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/fire"
+            style="@style/outlinedCardViewStyleWithoutMargin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin_0.5"
+            android:layout_marginBottom="@dimen/margin_0.5"
+            android:layout_weight="1"
+            android:tooltipText="@string/heating">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/margin"
+                    android:src="@drawable/fire"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/transaction"
+            style="@style/outlinedCardViewStyleWithoutMargin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_0.5"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin_0.5"
+            android:layout_weight="1"
+            android:tooltipText="@string/transaction">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/margin"
+                    android:src="@drawable/transaction"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/expenses"
+            style="@style/outlinedCardViewStyleWithoutMargin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:layout_marginEnd="@dimen/margin_0.5"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_weight="1"
+            android:tooltipText="@string/expenses">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/margin"
+                    android:layout_weight="2"
+                    android:src="@drawable/expense"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/energy"
+            style="@style/outlinedCardViewStyleWithoutMargin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_0.5"
+            android:layout_marginTop="@dimen/margin_0.5"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_weight="1"
+            android:tooltipText="@string/electricity">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/margin"
+                    android:layout_weight="2"
+                    android:src="@drawable/energy"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</LinearLayout>

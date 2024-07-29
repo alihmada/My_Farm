@@ -50,15 +50,14 @@ public class FarmID extends AppCompatActivity {
     private EditText firstName;
     private EditText lastName;
     private EditText farmID;
-    private Uri uri;
-    private String id;
-    private Gson gson;
-
     private final ActivityResultLauncher<ScanOptions> scanOptionsActivityResultLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
             farmID.setText(result.getContents());
         }
     });
+    private Uri uri;
+    private String id;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,6 @@ public class FarmID extends AppCompatActivity {
         setContentView(R.layout.activity_farm_id);
 
         initViews();
-        setStatusBarColor();
         Loading.progressDialogConstructor(this);
         setupSharedPreferences();
 
@@ -170,10 +168,6 @@ public class FarmID extends AppCompatActivity {
                 Loading.dismissProgressDialog();
             }
         });
-    }
-
-    private void setStatusBarColor() {
-        getWindow().setStatusBarColor(getResources().getColor(R.color.stb));
     }
 
     private void uploadImage() {

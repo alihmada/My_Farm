@@ -76,7 +76,7 @@ public class FeedStatus extends DialogFragment {
                 type = Feed.Type.GROWING;
                 setTypeOptionSelected(selectType, checkBoxesOfType, 0);
             } else if (view.getId() == R.id.initialize) {
-                type = Feed.Type.BEGGING;
+                type = Feed.Type.BEGINNING;
                 setTypeOptionSelected(selectType, checkBoxesOfType, 1);
             } else {
                 type = Feed.Type.END;
@@ -136,9 +136,9 @@ public class FeedStatus extends DialogFragment {
         button.setOnClickListener(view -> {
             if (isValidInputs()) {
                 if (operation == Bag.Operation.ADD)
-                    listener.onDataEntered(type, operation, Integer.parseInt(numberOfBags.getText().toString()), Integer.parseInt(priceOfTon.getText().toString()));
+                    listener.onDataEntered(type, operation, Integer.parseInt(numberOfBags.getText().toString().trim()), Integer.parseInt(priceOfTon.getText().toString().trim()));
                 else
-                    listener.onDataEntered(type, operation, Integer.parseInt(numberOfBags.getText().toString()), 0);
+                    listener.onDataEntered(type, operation, Integer.parseInt(numberOfBags.getText().toString().trim()), 0);
                 dismiss();
             }
         });
@@ -148,13 +148,13 @@ public class FeedStatus extends DialogFragment {
         if (type == null) setSelectionError(selectType);
         if (operation == null) setSelectionError(selectOperation);
 
-        setInputsError(numberOfBags, !Matcher.isNumber(numberOfBags.getText().toString()));
-        setInputsError(priceOfTon, !Matcher.isFloatingNumber(priceOfTon.getText().toString()));
+        setInputsError(numberOfBags, !Matcher.isNumber(numberOfBags.getText().toString().trim()));
+        setInputsError(priceOfTon, !Matcher.isFloatingNumber(priceOfTon.getText().toString().trim()));
 
         if (operation != null && operation == Bag.Operation.ADD)
-            return type != null && Matcher.isNumber(numberOfBags.getText().toString()) && Matcher.isFloatingNumber(priceOfTon.getText().toString());
+            return type != null && Matcher.isNumber(numberOfBags.getText().toString().trim()) && Matcher.isFloatingNumber(priceOfTon.getText().toString().trim());
         else
-            return type != null && operation != null && Matcher.isNumber(numberOfBags.getText().toString());
+            return type != null && operation != null && Matcher.isNumber(numberOfBags.getText().toString().trim());
     }
 
     private void setSelectionError(ConstraintLayout[] parents) {

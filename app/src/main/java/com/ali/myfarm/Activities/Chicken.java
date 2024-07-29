@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ali.myfarm.Adapters.FragmentViewPagerAdapter;
+import com.ali.myfarm.Classes.Calculation;
 import com.ali.myfarm.Classes.Common;
 import com.ali.myfarm.Classes.DateAndTime;
 import com.ali.myfarm.Data.Firebase;
@@ -54,8 +55,8 @@ public class Chicken extends AppCompatActivity {
     private void getBundleData() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mainID = extras.getString(Common.MAIN_ID);
-            periodID = extras.getString(Common.PERIOD_ID);
+            mainID = extras.getString(Common.YEAR);
+            periodID = extras.getString(Common.MONTH);
         }
     }
 
@@ -72,7 +73,7 @@ public class Chicken extends AppCompatActivity {
 
     private void initializeTextViews() {
         TextView header = findViewById(R.id.period_head);
-        header.setText(String.format("%s - %s", periodID, mainID));
+        header.setText(String.format("%s - %s", DateAndTime.getArabicNameOfMonth(periodID), mainID));
         all = findViewById(R.id.total_number);
         alive = findViewById(R.id.alive_txt);
         dead = findViewById(R.id.dead);
@@ -88,16 +89,20 @@ public class Chicken extends AppCompatActivity {
     }
 
     private void handleRecordClick() {
-        ChickenStatus status = new ChickenStatus(dead -> {
-            int existing = period.getNumberOfAliveChickens() - period.getNumberOfSold() - dead;
-            if (existing >= 0) {
-                saveChickenData(period.getNumberOfAliveChickens(), dead);
-                updateNumberOfDead(dead);
-            } else {
-                showAlert(getString(R.string.no_enough_chicken));
-            }
-        });
-        status.show(getSupportFragmentManager(), "");
+        if (!Common.isFinished) {
+            ChickenStatus status = new ChickenStatus(dead -> {
+                int existing = period.getNumberOfAliveChickens() - period.getNumberOfSold() - dead;
+                if (existing >= 0) {
+                    saveChickenData(period.getNumberOfAliveChickens(), dead);
+                    updateNumberOfDead(dead);
+                } else {
+                    showAlert(getString(R.string.no_enough_chicken));
+                }
+            });
+            status.show(getSupportFragmentManager(), "");
+        } else {
+            showAlert(getString(R.string.finished));
+        }
     }
 
     private void saveChickenData(int aliveChickens, int dead) {
@@ -145,10 +150,10 @@ public class Chicken extends AppCompatActivity {
     private void viewHandler() {
         model.getPeriod().observe(this, period -> {
             this.period = period;
-            all.setText(String.valueOf(period.getNumberOfChicken()));
-            alive.setText(String.valueOf(period.getNumberOfAliveChickens()));
-            dead.setText(String.valueOf(period.getNumberOfDead()));
-            sold.setText(String.valueOf(period.getNumberOfSold()));
+            all.setText(Calculation.formatNumberWithCommas(period.getNumberOfChicken()));
+            alive.setText(Calculation.formatNumberWithCommas(period.getNumberOfAliveChickens()));
+            dead.setText(Calculation.formatNumberWithCommas(period.getNumberOfDead()));
+            sold.setText(Calculation.formatNumberWithCommas(period.getNumberOfSold()));
         });
     }
 }

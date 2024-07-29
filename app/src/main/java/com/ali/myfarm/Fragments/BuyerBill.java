@@ -97,7 +97,8 @@ public class BuyerBill extends Fragment {
         weight.setText(Calculation.getNumber(buyer.getWeightOfChickens()));
         numberOfChickens.setText(String.valueOf(buyer.getNumberOfChickens()));
         priceOfKg.setText(Calculation.getNumber(buyer.getPrice()));
-        average.setText(Calculation.getNumber(Calculation.getAverage(buyer.getWeightOfChickens(), buyer.getNumberOfChickens())));
+
+        average.setText(Calculation.formatNumberWithCommas(Calculation.getAverage(buyer.getWeightOfChickens(), buyer.getNumberOfChickens())));
 
         chickensPrice = Calculation.getTotalPrice(buyer.getWeightOfChickens(), buyer.getPrice());
 

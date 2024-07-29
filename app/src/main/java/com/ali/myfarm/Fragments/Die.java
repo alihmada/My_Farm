@@ -25,8 +25,8 @@ import com.ali.myfarm.R;
 import java.util.List;
 
 public class Die extends Fragment {
-    String mainID, periodID;
-    ChickenViewModel model;
+    private String mainID, periodID;
+    private ChickenViewModel model;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -95,18 +95,21 @@ public class Die extends Fragment {
 
     private void setRecyclerView() {
         model.getChicken().observe(requireActivity(), chickens -> {
-            if (chickens != null) {
-                if (!chickens.isEmpty()) {
-                    setupRecyclerViewData(chickens);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (chickens == null || chickens.isEmpty()) {
+                handleEmptyChickens();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(chickens);
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptyChickens() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Chicken> chickens) {

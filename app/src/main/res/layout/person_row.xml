@@ -4,7 +4,9 @@
     style="@style/outlinedCardViewStyleWithoutMargin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin">
+    android:layout_marginBottom="@dimen/margin"
+    app:strokeColor="?colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,17 +25,19 @@
         <TextView
             android:id="@+id/name"
             style="@style/single_line"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
-            android:textSize="17sp"
+            android:textSize="@dimen/secondary_text_size"
             app:layout_constraintEnd_toStartOf="@+id/imageView9"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
         <TextView
             android:id="@+id/phone"
             style="@style/single_line"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView9"

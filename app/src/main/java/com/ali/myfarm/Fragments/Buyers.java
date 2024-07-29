@@ -30,7 +30,7 @@ import java.util.List;
 
 public class Buyers extends Fragment implements ViewOnClickListener {
 
-    Bundle bundle;
+    private Bundle bundle;
     private BuyersViewModel model;
     private String mainID, periodID;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -103,18 +103,21 @@ public class Buyers extends Fragment implements ViewOnClickListener {
 
     private void setRecyclerView() {
         model.getBuyers().observe(requireActivity(), buyers -> {
-            if (buyers != null) {
-                if (!buyers.isEmpty()) {
-                    setupRecyclerViewData(buyers);
-                    alert.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
+            progressBar.setVisibility(View.GONE);
+
+            if (buyers == null || buyers.isEmpty()) {
+                handleEmptyBuyers();
             } else {
-                alert.setVisibility(View.VISIBLE);
-                textView.setText(getString(R.string.data_not_found));
-                progressBar.setVisibility(View.GONE);
+                setupRecyclerViewData(buyers);
+                alert.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void handleEmptyBuyers() {
+        recyclerView.setAdapter(null);
+        alert.setVisibility(View.VISIBLE);
+        textView.setText(getString(R.string.data_not_found));
     }
 
     private void setupRecyclerViewData(List<Buyer> buyers) {

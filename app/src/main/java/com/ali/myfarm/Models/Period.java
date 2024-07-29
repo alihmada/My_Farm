@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Period implements Serializable {
     private String name;
+    private String number;
     private String beginningDate;
     private String endDate;
     private int numberOfChicken;
@@ -16,8 +17,9 @@ public class Period implements Serializable {
     public Period() {
     }
 
-    public Period(String name, String beginningDate, String endDate, int numberOfChicken, int numberOfDead, int numberOfSold, int numberOfFeedBags, double chickenPrice) {
+    public Period(String name, String number, String beginningDate, String endDate, int numberOfChicken, int numberOfDead, int numberOfSold, int numberOfFeedBags, double chickenPrice) {
         this.name = name;
+        this.number = number;
         this.beginningDate = beginningDate;
         this.endDate = endDate;
         this.numberOfChicken = numberOfChicken;
@@ -29,6 +31,10 @@ public class Period implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getNumber() {
+        return number;
     }
 
     public String getBeginningDate() {

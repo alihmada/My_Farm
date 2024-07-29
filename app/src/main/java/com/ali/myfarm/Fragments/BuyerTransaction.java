@@ -69,8 +69,8 @@ public class BuyerTransaction extends Fragment {
             if (isValidInputs(view)) {
                 Intent intent = new Intent(requireContext(), Bill.class);
                 intent.putExtra(Common.MOVED_DATA, gson.toJson(transaction));
-                bundle.putString(Common.MAIN_ID, mainID);
-                bundle.putString(Common.PERIOD_ID, periodID);
+                bundle.putString(Common.YEAR, mainID);
+                bundle.putString(Common.MONTH, periodID);
                 bundle.putBoolean(Common.IS_TRADER, false);
                 intent.putExtras(bundle);
                 startActivity(intent);

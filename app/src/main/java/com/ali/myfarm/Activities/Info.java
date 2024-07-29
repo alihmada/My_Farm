@@ -23,7 +23,6 @@ public class Info extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        setStatusBarColor();
 
         nDay = Objects.requireNonNull(getIntent().getExtras()).getString(Common.N_DAY);
         numOfChicken = Objects.requireNonNull(getIntent().getExtras()).getInt(Common.CHICKEN);
@@ -33,10 +32,6 @@ public class Info extends AppCompatActivity {
 
         ImageButton back = findViewById(R.id.back);
         back.setOnClickListener(view -> onBackPressed());
-    }
-
-    private void setStatusBarColor() {
-        getWindow().setStatusBarColor(getTheme().getResources().getColor(R.color.stb));
     }
 
     private void initializeViews() {
